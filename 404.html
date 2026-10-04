@@ -3,31 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ghostwood Labs</title>
-<meta name="description" content="Ghostwood Labs LLC: websites, analytics, prototypes, and more.">
+<title>Not found · Ghostwood Labs</title>
+<meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark">
-<link rel="canonical" href="https://ghostwoodlabs.com/">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png"> <!-- for browsers that ignore SVG icons -->
-<link rel="apple-touch-icon" href="apple-touch-icon.png"> <!-- 180 px, iOS home screen and Safari -->
-<!-- the card shown when the address is pasted into LinkedIn, Slack, iMessage … (needs a PNG; rendered from the mark at 1200×630) -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Ghostwood Labs">
-<meta property="og:title" content="Ghostwood Labs">
-<meta property="og:description" content="Websites, analytics, prototypes, and more.">
-<meta property="og:url" content="https://ghostwoodlabs.com/">
-<meta property="og:image" content="https://ghostwoodlabs.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Ghostwood Labs mark over the name">
-<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"> <!-- for browsers that ignore SVG icons -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"> <!-- 180 px, iOS home screen and Safari -->
 <style>
   @font-face {
     font-family: "IBM Plex Mono";
     font-style: normal;
     font-weight: 500;
     font-display: swap;
-    src: url(fonts/IBMPlexMono-Medium-Latin.woff2) format("woff2");
+    src: url(/fonts/IBMPlexMono-Medium-Latin.woff2) format("woff2");
   }
   :root {
     --ground: #141a20;
@@ -99,6 +87,10 @@
     0%, 25%, 100% { opacity: 0; }
     4%, 21%       { opacity: 1; }
   }
+  .sub .still { opacity: 1; animation: none; }
+  .back { margin-top: clamp(14px, 2.4vmin, 24px); font-size: clamp(12px, 1.8vmin, 18px); letter-spacing: .06em; }
+  .back a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--ink-dim); padding-bottom: 2px; }
+  .back a:hover, .back a:focus-visible { color: var(--ink); border-color: var(--ink); }
   @media (prefers-reduced-motion: reduce) {
     .sub span { animation: none; }
     .sub span:first-child { opacity: 1; }
@@ -122,13 +114,9 @@
   <svg class="mark" viewBox="0 0 576 576" role="img" aria-label="Ghostwood Labs mark">
     <g fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"><path d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path d="M288 57.5L288 177.5"/><path d="M288 518.5L288 403.5"/><path d="M90.5 176.5L144.63 204.58A26 26 0 0 0 169.19 204.26L209.58 181.92A26 26 0 0 0 223 159.17L223 101.5L158.5 137.5"/><path d="M485.5 176.5L431.37 204.58A26 26 0 0 1 406.81 204.26L366.42 181.92A26 26 0 0 1 353 159.17L353 101.5L417.5 137.5"/><path d="M157 211L157 287.5"/><path d="M419 211L419 287.5"/><path d="M90.5 399.5L144.63 371.42A26 26 0 0 1 169.19 371.74L209.58 394.08A26 26 0 0 1 223 416.83L223 474.5L158.5 438.5"/><path d="M485.5 399.5L431.37 371.42A26 26 0 0 0 406.81 371.74L366.42 394.08A26 26 0 0 0 353 416.83L353 474.5L417.5 438.5"/><path d="M26.5 288L92 325.5L92 250.5"/><path d="M549.5 288L484 325.5L484 250.5"/></g>
   </svg>
-  <h1 class="wordmark">Ghostwood Labs</h1>
-  <p class="sub" aria-label="Websites, analytics, prototypes, and more">
-    <span aria-hidden="true">Websites</span>
-    <span aria-hidden="true">Analytics</span>
-    <span aria-hidden="true">Prototypes</span>
-    <span aria-hidden="true">And more</span>
-  </p>
+  <h1 class="wordmark"><a href="/" style="color:inherit;text-decoration:none">Ghostwood Labs</a></h1>
+  <p class="sub"><span class="still">Nothing here</span></p>
+  <p class="back"><a href="/">Back to the front page</a></p>
 </main>
 <footer><a href="mailto:steve@ghostwoodlabs.com">steve@ghostwoodlabs.com</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
 </body>
