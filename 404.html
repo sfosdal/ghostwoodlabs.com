@@ -7,6 +7,7 @@
 <meta name="robots" content="noindex">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#141a20">
+<link rel="preload" href="/fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="/favicon.ico?v=5" sizes="48x48">
 <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5">
@@ -54,7 +55,15 @@
   }
   @media (prefers-reduced-motion: no-preference) {
     .mark path { stroke-dasharray: 1 2; stroke-dashoffset: 1.02; animation: draw 1.1s cubic-bezier(.4, 0, .2, 1) forwards; }
-    .mark path + path { animation-duration: .9s; animation-delay: .45s; }
+    .mark path + path { animation-duration: .9s; }
+    .mark path:nth-child(2), .mark path:nth-child(3)   { animation-delay: .45s; }
+    .mark path:nth-child(4), .mark path:nth-child(5)   { animation-delay: .55s; }
+    .mark path:nth-child(6), .mark path:nth-child(7)   { animation-delay: .65s; }
+    .mark path:nth-child(10), .mark path:nth-child(11) { animation-delay: .75s; }
+    .mark path:nth-child(8), .mark path:nth-child(9)   { animation-delay: .85s; }
+    .wordmark, .sub, .back { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
+    .sub, .back { animation-delay: 2.1s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .wordmark {
