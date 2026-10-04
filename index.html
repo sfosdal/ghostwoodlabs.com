@@ -8,6 +8,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#141a20"> <!-- tints the browser chrome on phones to the page ground -->
 <link rel="canonical" href="https://ghostwoodlabs.com/">
+<link rel="preload" href="fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin> <!-- so the wordmark never swaps faces mid-entrance -->
 <!-- icons: the .ico (16/32/48 px, PNG inside) is what browsers ask for by default and what Safari and old
      engines read; the SVG is preferred by Chrome and Firefox. ?v=5: white stroke 38 (was orange 30) so the mark reads at 16 px; v=2 had busted the pre-launch "no icon". -->
 <link rel="icon" href="/favicon.ico?v=5" sizes="48x48">
@@ -75,7 +76,25 @@
       stroke-dashoffset: 1.02; /* a hair past the end so the round cap does not sit as a dot at the start */
       animation: draw 1.1s cubic-bezier(.4, 0, .2, 1) forwards;
     }
-    .mark path + path { animation-duration: .9s; animation-delay: .45s; }
+    .mark path + path { animation-duration: .9s; } /* the inner strokes, in pairs a tenth of a second apart */
+    .mark path:nth-child(2), .mark path:nth-child(3)   { animation-delay: .45s; } /* the two stems */
+    .mark path:nth-child(4), .mark path:nth-child(5)   { animation-delay: .55s; } /* top spirals */
+    .mark path:nth-child(6), .mark path:nth-child(7)   { animation-delay: .65s; } /* middle uprights */
+    .mark path:nth-child(10), .mark path:nth-child(11) { animation-delay: .75s; } /* side chevrons */
+    .mark path:nth-child(8), .mark path:nth-child(9)   { animation-delay: .85s; } /* bottom spirals */
+    /* 1. the name waits for the mark (last stroke lands at 1.75 s), then rises in; the captions begin after it */
+    .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    p.sub span { animation-delay: 2.2s; } /* p.sub outranks the .sub span shorthand below, which would zero the delay */
+    p.sub span:nth-child(2)  { animation-delay: 5.2s; }
+    p.sub span:nth-child(3)  { animation-delay: 8.2s; }
+    p.sub span:nth-child(4)  { animation-delay: 11.2s; }
+    p.sub span:nth-child(5)  { animation-delay: 14.2s; }
+    p.sub span:nth-child(6)  { animation-delay: 17.2s; }
+    p.sub span:nth-child(7)  { animation-delay: 20.2s; }
+    p.sub span:nth-child(8)  { animation-delay: 23.2s; }
+    p.sub span:nth-child(9)  { animation-delay: 26.2s; }
+    p.sub span:nth-child(10) { animation-delay: 29.2s; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .wordmark {
@@ -100,22 +119,14 @@
     height: 1.4em;
     width: 100%;
   }
-  /* 10 captions stacked in one slot; each rises in and holds for its 3 s of a 30 s loop, no script */
+  /* 10 captions stacked in one slot; each rises in and holds for its 3 s of a 30 s loop, no script;
+     the delays live in the motion block above, after the name has arrived */
   .sub span {
     position: absolute;
     left: 0; right: 0;
     opacity: 0;
     animation: rotate 30s infinite;
   }
-  .sub span:nth-child(2) { animation-delay: 3s; }
-  .sub span:nth-child(3) { animation-delay: 6s; }
-  .sub span:nth-child(4) { animation-delay: 9s; }
-  .sub span:nth-child(5) { animation-delay: 12s; }
-  .sub span:nth-child(6) { animation-delay: 15s; }
-  .sub span:nth-child(7) { animation-delay: 18s; }
-  .sub span:nth-child(8) { animation-delay: 21s; }
-  .sub span:nth-child(9) { animation-delay: 24s; }
-  .sub span:nth-child(10) { animation-delay: 27s; }
   @keyframes rotate {
     0%        { opacity: 0; transform: translateY(3px); }
     1.6%, 8.4% { opacity: 1; transform: translateY(0); }
