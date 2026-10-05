@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ghostwood Labs</title>
-<meta name="description" content="Ghostwood Labs LLC: websites, analytics, prototypes, research, data, automation, integrations, tooling, and more.">
+<meta name="description" content="Ghostwood Labs LLC: websites, analytics, prototypes, research, automation, side quests, and more.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#141a20"> <!-- tints the browser chrome on phones to the page ground -->
 <link rel="canonical" href="https://ghostwoodlabs.com/">
+<script>if (/[?&]motion=reduce(&|$)/.test(location.search)) document.documentElement.dataset.motion = "reduce";</script> <!-- dev switch: /?motion=reduce previews the reduced-motion layout -->
 <link rel="preload" href="fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin> <!-- so the wordmark never swaps faces mid-entrance -->
 <!-- icons: the .ico (16/32/48 px, PNG inside) is what browsers ask for by default and what Safari and old
      engines read; the SVG is preferred by Chrome and Firefox. ?v=5: white stroke 38 (was orange 30) so the mark reads at 16 px; v=2 had busted the pre-launch "no icon". -->
@@ -36,13 +37,15 @@
   :root {
     --ground: #141a20;
     --ink: #ffffff;
-    --ink-soft: #9ba2a9; /* white, five steps down, for the wordmark */
+    --ink-mid: #c1c7cd; /* white, three steps down, for the wordmark */
+    --ink-soft: #9ba2a9; /* white, five steps down, for the contact address */
     --ink-dim: rgba(255,255,255,.44); /* the subcaption and footer */
+    --wordmark-size: clamp(18px, 4vmin, 44px); /* the name's type size; the static caption row is bounded by it */
     --gold: #e8791d; /* the brand's darker orange, the one used on white; #f08a33 is the lighter step */
     --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
+  html, body { min-height: 100%; }
   body {
     /* a faint pool of light behind the mark, a few percent above the ground, so the panel has depth */
     background: var(--ground) radial-gradient(70vmax 70vmax at 50% 42%, #1b222a, var(--ground) 70%) no-repeat;
@@ -53,19 +56,28 @@
     min-height: 100dvh;
   }
   main {
-    /* the stack is centred on the viewport itself; the footer is taken out of flow so it cannot push it */
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 16px 76px; /* clears the two-line footer */
+    /* six grid rows filling the viewport: slack, the mark, slack, the name and captions, slack, the footer. The
+       mark sits where centring the whole stack would put it (its slack above is twice the slack below the text
+       block), and the text block is centred in what is left between the mark and the footer. The middle row never
+       shrinks below the old gap between mark and name. The height is stated, not a minimum, because flexible rows
+       only share out a definite height. The footer is pinned to the viewport's foot (its row is just its 76px of
+       clearance); in a window too short for the stack the script at the end hides the captions. */
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: 2fr auto minmax(clamp(18px, 4vmin, 40px), 1fr) auto 1fr 76px;
+    justify-items: center;
+    padding: 16px 16px 0;
     text-align: center;
   }
   .mark {
-    width: min(80vw, 64vh, 720px);
-    height: auto;
+    grid-row: 2;
+    /* the last term is the last resort: in a window too short even for mark, name and footer, the mark gives up
+       height so those three still fit (the 92px are the top padding and the footer's clearance) */
+    --mark-size: max(48px, min(80vw, 64vh, 720px, 100vh - 92px - clamp(18px, 4vmin, 40px) - var(--wordmark-size)));
+    --mark-size: max(48px, min(80vw, 64vh, 720px, 100dvh - 92px - clamp(18px, 4vmin, 40px) - var(--wordmark-size)));
+    width: var(--mark-size);
+    height: var(--mark-size); /* stated, not auto: a grid row would otherwise squeeze the svg in a short window */
     color: var(--ink);
   }
   /* the mark draws itself on once, on first paint, top down and left-right symmetric: the outline grows from the
@@ -93,28 +105,36 @@
     .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     p.sub span { animation-delay: 2.2s; } /* p.sub outranks the .sub span shorthand below, which would zero the delay */
-    p.sub span:nth-child(2) { animation-delay: 5.2s; }
-    p.sub span:nth-child(3) { animation-delay: 8.2s; }
-    p.sub span:nth-child(4) { animation-delay: 11.2s; }
-    p.sub span:nth-child(5) { animation-delay: 14.2s; }
-    p.sub span:nth-child(6) { animation-delay: 17.2s; }
-    p.sub span:nth-child(7) { animation-delay: 20.2s; }
-    p.sub span:nth-child(8) { animation-delay: 23.2s; }
-    p.sub .dot { animation-delay: 23.2s; } /* the dots ride the last caption's slot */
+    p.sub span:nth-child(2) { animation-delay: 5.4s; }
+    p.sub span:nth-child(3) { animation-delay: 8.6s; }
+    p.sub span:nth-child(4) { animation-delay: 11.8s; }
+    p.sub span:nth-child(5) { animation-delay: 15s; }
+    p.sub span:nth-child(6) { animation-delay: 18.2s; }
+    p.sub span:nth-child(7) { animation-delay: 21.4s; }
+    /* the eight dots after "And more" start .9 s into its slot and land .6 s apart */
+    p.sub .dot:nth-child(1) { animation-delay: 22.3s; }
+    p.sub .dot:nth-child(2) { animation-delay: 22.9s; }
+    p.sub .dot:nth-child(3) { animation-delay: 23.5s; }
+    p.sub .dot:nth-child(4) { animation-delay: 24.1s; }
+    p.sub .dot:nth-child(5) { animation-delay: 24.7s; }
+    p.sub .dot:nth-child(6) { animation-delay: 25.3s; }
+    p.sub .dot:nth-child(7) { animation-delay: 25.9s; }
+    p.sub .dot:nth-child(8) { animation-delay: 26.5s; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
+  .text { grid-row: 4; }
   .wordmark {
-    margin-top: clamp(18px, 4vmin, 40px);
     font-family: var(--mono);
     font-weight: 500;
-    font-size: clamp(18px, 4vmin, 44px);
+    font-size: var(--wordmark-size);
     letter-spacing: .1em;
     line-height: 1;
     text-transform: uppercase;
-    color: var(--ink-soft);
+    color: var(--ink-mid);
     white-space: nowrap;
     padding-left: .1em; /* optical: tracking adds trailing space after the last letter */
   }
+  .sub.no-room, html[data-motion="reduce"] .sub.no-room { display: none; } /* the script at the end: no room for the captions in this window */
   .sub {
     margin-top: clamp(16px, 3.2vmin, 32px);
     font-size: clamp(12px, 1.8vmin, 18px);
@@ -123,33 +143,71 @@
     color: var(--ink-dim);
     position: relative;
     height: 1.4em;
-    width: 100%;
+    width: 100vw; /* the full window width, so a caption really starts at one border and leaves at the other */
+    margin-left: calc(50% - 50vw);
+    overflow: hidden; /* nothing leaks past the window edges while a caption is off to one side */
   }
-  /* 8 captions stacked in one slot; each rises in and holds for its 3 s of a 24 s loop, no script;
-     the delays live in the motion block above, after the name has arrived */
+  /* 7 captions stacked in one slot, no script. Each slides in from the right window border (.6 s), pauses centred
+     for 2 s, and flies off through the left border (.6 s): a 3.2 s slot. "And more" slides in, holds while its eight
+     dots arrive (done at 5.4 s), stays 3 s more, fades out over 1.6 s, then the slot sits empty 5 s before the loop
+     restarts: a 15 s slot, 34.2 s loop. The delays live in the motion block above, after the name has arrived */
   .sub span {
     position: absolute;
     left: 0; right: 0;
     opacity: 0;
-    animation: rotate 24s infinite;
+    animation: rotate 34.2s infinite;
   }
+  .sub span:last-child { animation-name: rotate-last; }
   @keyframes rotate {
-    0%          { opacity: 0; transform: translateY(3px); }
-    2%, 10.5%   { opacity: 1; transform: translateY(0); }
-    12.5%, 100% { opacity: 0; transform: translateY(-3px); }
+    0%           { opacity: 1; transform: translateX(100%); animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+    1.754%       { opacity: 1; transform: none; }
+    7.602%       { opacity: 1; transform: none; animation-timing-function: cubic-bezier(.7, 0, .9, .5); }
+    9.357%       { opacity: 1; transform: translateX(-100%); }
+    9.358%, 100% { opacity: 0; transform: translateX(-100%); }
   }
-  /* "And more" gains its three dots one at a time, .9 / 1.5 / 2.1 s into its slot */
-  .sub .dot { font-style: normal; opacity: 0; animation: 24s infinite; }
-  .sub .dot:nth-child(1) { animation-name: dot1; }
-  .sub .dot:nth-child(2) { animation-name: dot2; }
-  .sub .dot:nth-child(3) { animation-name: dot3; }
-  @keyframes dot1 { 0%, 3.75% { opacity: 0; } 4.5%, 100% { opacity: 1; } }
-  @keyframes dot2 { 0%, 6.25% { opacity: 0; } 7%, 100%   { opacity: 1; } }
-  @keyframes dot3 { 0%, 8.75% { opacity: 0; } 9.5%, 100% { opacity: 1; } }
+  @keyframes rotate-last {
+    0%           { opacity: 1; transform: translateX(100%); animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+    1.754%       { opacity: 1; transform: none; }
+    24.561%      { opacity: 1; transform: none; animation-timing-function: ease-in-out; }
+    29.240%, 100% { opacity: 0; transform: none; }
+  }
+  /* each dot fades in over .3 s at its own delay, holds while its caption shows, and is hidden again before the
+     caption's next pass */
+  .sub .dot { font-style: normal; opacity: 0; animation: dot-in 34.2s infinite; }
+  @keyframes dot-in { 0% { opacity: 0; } .877%, 28% { opacity: 1; } 28.01%, 100% { opacity: 0; } }
+  /* reduced motion: no sliding captions at all. The same spans become one static row, centred, no wider than 120 % of the
+     name (GHOSTWOOD LABS is 14 monospace characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its
+     size, so 11.88em), wrapping into centred lines; each word kept whole, a middle dot fixed just ahead of every word
+     and hidden where a row starts (it hangs in the 1.6em column gap to the left of its word, so the separators of
+     every row line up). The columns are equal and even in number, so a column of separators runs down the centre
+     of the mark. The script at the foot of the page picks how many columns fit the bound and marks each row's
+     first caption, since CSS cannot do either. Opening the
+     page as /?motion=reduce forces the same look for checking (the one-line script in the head sets the attribute);
+     it also stills the mark and the name, as the no-preference block above never runs for real users */
   @media (prefers-reduced-motion: reduce) {
-    .sub span, .sub .dot { animation: none; transform: none; }
-    .sub span:first-child, .sub .dot { opacity: 1; }
+    .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
+    .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
+    .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
+    .sub span:last-child::after { content: "\2026"; }
+    .sub .dot { display: none; }
+    .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
+    .sub span { text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
+    .sub span.line-start { text-align: right; }
+    .sub.stacked span { text-align: center; } /* one column: nothing to hug */
+    .sub span.alone { grid-column: 1 / -1; text-align: center; } /* And more… on a row of its own, centred under the columns */
   }
+  html[data-motion="reduce"] .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
+  html[data-motion="reduce"] .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
+  html[data-motion="reduce"] .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
+  html[data-motion="reduce"] .sub span:last-child::after { content: "\2026"; }
+  html[data-motion="reduce"] .sub .dot { display: none; }
+  html[data-motion="reduce"] .sub span.line-start::before { visibility: hidden; }
+  html[data-motion="reduce"] .sub span { text-align: left; }
+  html[data-motion="reduce"] .sub span.line-start { text-align: right; }
+  html[data-motion="reduce"] .sub.stacked span { text-align: center; }
+  html[data-motion="reduce"] .sub span.alone { grid-column: 1 / -1; text-align: center; }
+  html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; } /* :nth-child(n) outranks .mark .o:nth-child(1) above, which names the outline animation */
+  html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
   footer {
     position: absolute;
     left: 0; right: 0; bottom: 0;
@@ -173,18 +231,55 @@
     <defs><!-- rounds the inside corners where strokes meet: blur, then a hard alpha threshold at 50 % --><filter id="rnd" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="7"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -12"/></filter></defs>
     <g fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" filter="url(#rnd)"><path class="o" pathLength="1" d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path class="o" pathLength="1" d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path pathLength="1" d="M288 57.5L288 177.5"/><path pathLength="1" d="M288 518.5L288 403.5"/><path pathLength="1" d="M90.5 176.5L144.63 204.58A26 26 0 0 0 169.19 204.26L209.58 181.92A26 26 0 0 0 223 159.17L223 101.5L158.5 137.5"/><path pathLength="1" d="M485.5 176.5L431.37 204.58A26 26 0 0 1 406.81 204.26L366.42 181.92A26 26 0 0 1 353 159.17L353 101.5L417.5 137.5"/><path pathLength="1" d="M157 211L157 287.5"/><path pathLength="1" d="M419 211L419 287.5"/><path pathLength="1" d="M90.5 399.5L144.63 371.42A26 26 0 0 1 169.19 371.74L209.58 394.08A26 26 0 0 1 223 416.83L223 474.5L158.5 438.5"/><path pathLength="1" d="M485.5 399.5L431.37 371.42A26 26 0 0 0 406.81 371.74L366.42 394.08A26 26 0 0 0 353 416.83L353 474.5L417.5 438.5"/><path pathLength="1" d="M26.5 288L92 325.5L92 250.5"/><path pathLength="1" d="M549.5 288L484 325.5L484 250.5"/></g>
   </svg>
+  <div class="text">
   <h1 class="wordmark">Ghostwood Labs</h1>
-  <p class="sub" aria-label="Websites, analytics, prototypes, research, automation, digging, side quests, and more">
+  <p class="sub" aria-label="Websites, analytics, prototypes, research, automation, side quests, and more">
     <span aria-hidden="true">Websites</span>
     <span aria-hidden="true">Analytics</span>
     <span aria-hidden="true">Prototypes</span>
     <span aria-hidden="true">Research</span>
     <span aria-hidden="true">Automation</span>
-    <span aria-hidden="true">Digging</span>
     <span aria-hidden="true">Side quests</span>
-    <span aria-hidden="true">And more<i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
+    <span aria-hidden="true">And more<i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
   </p>
+  </div>
 </main>
 <footer><a href="mailto:steve@ghostwoodlabs.com">steve@ghostwoodlabs.com</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
+<script>
+  // The captions give way when the window is too short for mark, name, captions and footer together. And the static
+  // caption row (reduced motion, or /?motion=reduce) is a grid of as many equal columns as fit the row's bound, an
+  // even number so a column of separator dots runs down the page's centre line, under the mark's centre. The dot
+  // hangs ahead of every caption and must not show where a row starts; "And more…" alone on the last row spans the
+  // columns. Re-run on resize, font arrival and a motion change.
+  (function () {
+    var text = document.querySelector('.text'), sub = document.querySelector('.sub'), spans = sub.querySelectorAll('span'), n = spans.length;
+    function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
+    function layout() {
+      sub.classList.remove('no-room');
+      columns();
+      if (text.getBoundingClientRect().bottom > innerHeight - 76) sub.classList.add('no-room'); /* into the footer's row */
+    }
+    function columns() {
+      if (getComputedStyle(sub).display !== 'grid') return;
+      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0;
+      spans.forEach(function (s) { widest = Math.max(widest, textWidth(s)); });
+      for (cols = n - n % 2; cols > 1; cols -= 2) {
+        if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
+      }
+      if (cols < 1) cols = 1;
+      sub.style.setProperty('--cols', cols);
+      sub.classList.toggle('stacked', cols === 1);
+      var alone = (n - 1) % cols === 0;
+      spans.forEach(function (s, i) {
+        s.classList.toggle('line-start', i % cols === 0);
+        s.classList.toggle('alone', alone && i === n - 1);
+      });
+    }
+    layout();
+    addEventListener('resize', layout);
+    if (document.fonts) document.fonts.ready.then(layout);
+    matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', layout);
+  })();
+</script>
 </body>
 </html>
