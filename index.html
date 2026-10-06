@@ -151,6 +151,7 @@
      for 2 s, and flies off through the left border (.6 s): a 3.2 s slot. "And more" slides in, holds while its eight
      dots arrive (done at 5.4 s), stays 3 s more, fades out over 1.6 s, then the slot sits empty 5 s before the loop
      restarts: a 15 s slot, 34.2 s loop. The delays live in the motion block above, after the name has arrived */
+  .sub b { font-weight: inherit; }
   .sub span {
     position: absolute;
     left: 0; right: 0;
@@ -188,24 +189,34 @@
     .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
     .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
     .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
-    .sub span:last-child::after { content: "\2026"; }
+    .sub span:last-child:not(.alone)::after { content: "\2026"; }
     .sub .dot { display: none; }
     .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
     .sub span { text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
     .sub span.line-start { text-align: right; }
     .sub.stacked span { text-align: center; } /* one column: nothing to hug */
-    .sub span.alone { grid-column: 1 / -1; text-align: center; } /* And more… on a row of its own, centred under the columns */
+    /* "And more…" on a row of its own: its two words take the two columns, so the space between them sits on the
+       separators' line; each word is pulled .41em toward the gap so the space reads as an ordinary one (.78em) */
+    .sub span.alone { display: contents; }
+    .sub span.alone::before { content: none; }
+    .sub span.alone b:first-child { text-align: right; transform: translateX(.41em); }
+    .sub span.alone b:last-of-type { text-align: left; transform: translateX(-.41em); }
+    .sub span.alone b:last-of-type::after { content: "\2026"; }
   }
   html[data-motion="reduce"] .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
   html[data-motion="reduce"] .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
   html[data-motion="reduce"] .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
-  html[data-motion="reduce"] .sub span:last-child::after { content: "\2026"; }
+  html[data-motion="reduce"] .sub span:last-child:not(.alone)::after { content: "\2026"; }
   html[data-motion="reduce"] .sub .dot { display: none; }
   html[data-motion="reduce"] .sub span.line-start::before { visibility: hidden; }
   html[data-motion="reduce"] .sub span { text-align: left; }
   html[data-motion="reduce"] .sub span.line-start { text-align: right; }
   html[data-motion="reduce"] .sub.stacked span { text-align: center; }
-  html[data-motion="reduce"] .sub span.alone { grid-column: 1 / -1; text-align: center; }
+  html[data-motion="reduce"] .sub span.alone { display: contents; }
+  html[data-motion="reduce"] .sub span.alone::before { content: none; }
+  html[data-motion="reduce"] .sub span.alone b:first-child { text-align: right; transform: translateX(.41em); }
+  html[data-motion="reduce"] .sub span.alone b:last-of-type { text-align: left; transform: translateX(-.41em); }
+  html[data-motion="reduce"] .sub span.alone b:last-of-type::after { content: "\2026"; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; } /* :nth-child(n) outranks .mark .o:nth-child(1) above, which names the outline animation */
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
   footer {
@@ -240,7 +251,7 @@
     <span aria-hidden="true">Research</span>
     <span aria-hidden="true">Automation</span>
     <span aria-hidden="true">Side quests</span>
-    <span aria-hidden="true">And more<i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
+    <span aria-hidden="true"><b>And</b> <b>more</b><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
   </p>
   </div>
 </main>
@@ -262,14 +273,14 @@
     function columns() {
       if (getComputedStyle(sub).display !== 'grid') return;
       var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0;
-      spans.forEach(function (s) { widest = Math.max(widest, textWidth(s)); });
+      spans.forEach(function (s) { s.classList.remove('alone'); widest = Math.max(widest, textWidth(s)); }); /* measured as one cell */
       for (cols = n - n % 2; cols > 1; cols -= 2) {
         if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
       }
       if (cols < 1) cols = 1;
       sub.style.setProperty('--cols', cols);
       sub.classList.toggle('stacked', cols === 1);
-      var alone = (n - 1) % cols === 0;
+      var alone = cols > 1 && (n - 1) % cols === 0;
       spans.forEach(function (s, i) {
         s.classList.toggle('line-start', i % cols === 0);
         s.classList.toggle('alone', alone && i === n - 1);
