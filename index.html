@@ -156,9 +156,14 @@
     color: var(--ink-dim);
     position: relative;
     height: 1.4em;
-    width: 100vw; /* the full window width, so a caption really starts at one border and leaves at the other */
-    margin-left: calc(50% - 50vw);
-    overflow: hidden; /* nothing leaks past the window edges while a caption is off to one side */
+    width: min(100vw, 1200px); /* the full window width, so a caption really starts at one border and leaves at the
+                                  other; capped at 1200px so the slide is no faster on a wide screen (then the edges
+                                  are softened below, so a caption fades in rather than appearing) */
+    margin-left: calc(50% - min(50vw, 600px));
+    overflow: hidden; /* nothing leaks past the edges while a caption is off to one side */
+  }
+  @media (min-width: 1201px) {
+    .sub { -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); }
   }
   /* 7 captions stacked in one slot, no script. Each slides in from the right window border (.6 s), pauses centred
      for 2 s, and flies off through the left border (.6 s): a 3.2 s slot. "And more" slides in, holds while its eight
@@ -257,7 +262,8 @@
 <script>
   // The captions give way when the window is too short for mark, name, captions and footer together. And the static
   // caption row (reduced motion, or /?motion=reduce) is a grid of as many equal columns as fit the row's bound, an
-  // even number so a column of separator dots runs down the page's centre line, under the mark's centre. The dot
+  // even number so a column of separator dots runs down the page's centre line, under the mark's centre, and never
+  // fewer than two where the window has room for two (the name's bound is too narrow for that on a phone). The dot
   // hangs ahead of every caption and must not show where a row starts; "And more…" alone on the last row spans the
   // columns. The text block's real height goes to the grid (--text-h, so the mark keeps its place unless the block
   // needs the room) and, when the static grid shows, to the mark's last resort (--below: the block plus a gap of
@@ -281,8 +287,11 @@
     }
     function columns() {
       if (getComputedStyle(sub).display !== 'grid') return;
-      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0;
+      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0, two;
+      sub.style.width = '';
       spans.forEach(function (s) { s.classList.remove('alone'); widest = Math.max(widest, textWidth(s)); }); /* measured as one cell */
+      two = Math.ceil(2 * widest + gap) + 1; /* the row is bounded by the name's width, but never narrower than two columns when the window has them (phones) */
+      if (two > sub.clientWidth && two <= innerWidth - 32) sub.style.width = two + 'px';
       for (cols = n - n % 2; cols > 1; cols -= 2) {
         if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
       }
