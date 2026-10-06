@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#141a20"> <!-- tints the browser chrome on phones to the page ground -->
 <link rel="canonical" href="https://ghostwoodlabs.com/">
-<script>if (/[?&]motion=reduce(&|$)/.test(location.search)) document.documentElement.dataset.motion = "reduce";</script> <!-- dev switch: /?motion=reduce previews the reduced-motion layout -->
+<script>if (/[?&]motion=reduce(&|$)/.test(location.search) || matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.dataset.motion = "reduce";</script> <!-- the reduced-motion layout is keyed off this attribute, set from the system setting (so its rules exist once) or by /?motion=reduce for checking -->
 <link rel="preload" href="fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin> <!-- so the wordmark never swaps faces mid-entrance -->
 <!-- icons: the .ico (16/32/48 px, PNG inside) is what browsers ask for by default and what Safari and old
      engines read; the SVG is preferred by Chrome and Firefox. ?v=5: white stroke 38 (was orange 30) so the mark reads at 16 px; v=2 had busted the pre-launch "no icon". -->
@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ghostwood Labs">
 <meta property="og:title" content="Ghostwood Labs">
-<meta property="og:description" content="Websites, analytics, prototypes, and more.">
+<meta property="og:description" content="Websites, analytics, prototypes, research, automation, side-quests, and more.">
 <meta property="og:url" content="https://ghostwoodlabs.com/">
 <meta property="og:image" content="https://ghostwoodlabs.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -39,11 +39,14 @@
     --ink: #ffffff;
     --ink-mid: #c1c7cd; /* white, three steps down, for the wordmark */
     --ink-soft: #9ba2a9; /* white, five steps down, for the contact address */
-    --ink-dim: rgba(255,255,255,.44); /* the subcaption and footer */
+    --ink-dim: rgba(255,255,255,.5); /* the subcaption and footer: 5.2:1 on the ground, 5.0:1 over the pool of light (.44 was 4.3:1, under AA for small text) */
     --wordmark-size: clamp(18px, 4vmin, 44px); /* the name's type size; the static caption row is bounded by it */
+    --gap: clamp(18px, 4vmin, 40px); /* the least space between the mark and the name (the script at the foot mirrors it) */
+    --vh: 100vh; /* the viewport's height; dvh (below) follows a phone's collapsing toolbar */
     --gold: #e8791d; /* the brand's darker orange, the one used on white; #f08a33 is the lighter step */
     --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   }
+  @supports (height: 1dvh) { :root { --vh: 100dvh; } }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { min-height: 100%; }
   body {
@@ -52,30 +55,37 @@
     color: var(--ink);
     font-family: var(--mono);
     position: relative;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: var(--vh);
   }
   main {
     /* six grid rows filling the viewport: slack, the mark, slack, the name and captions, slack, the footer. The
-       mark sits where centring the whole stack would put it (its slack above is twice the slack below the text
-       block), and the text block is centred in what is left between the mark and the footer. The middle row never
-       shrinks below the old gap between mark and name. The height is stated, not a minimum, because flexible rows
-       only share out a definite height. The footer is pinned to the viewport's foot (its row is just its 76px of
-       clearance); in a window too short for the stack the script at the end hides the captions. */
-    height: 100vh;
-    height: 100dvh;
+       slack above the mark is what centring the stack of mark, gap, name and sliding caption row would leave
+       (half the free height; two thirds of what is left once the middle row is down to the gap), figured from that
+       fixed stack height, so the mark sits in the same place whichever caption layout is showing. It only gives
+       way when the real text block (the static caption grid can be four rows tall) would otherwise land closer
+       than a gap to the footer. The text block is centred in what is left between the mark and the footer. The
+       height is stated, not a minimum, because flexible rows only share out a definite height. The footer is
+       pinned to the viewport's foot (its row is just its 76px of clearance, the 92px below add the top padding);
+       in a window too short for the stack the script at the end hides the captions. */
+    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1.4 * clamp(12px, 1.8vmin, 18px)); /* the name, its margin and the sliding caption row */
+    --text-h: var(--text-fixed); /* the text block's real height; the script sets it */
+    --free: calc(var(--vh) - 92px - var(--mark-size) - var(--text-fixed));
+    --room: calc(var(--vh) - 92px - var(--mark-size) - var(--text-h));
+    height: var(--vh);
     display: grid;
-    grid-template-rows: 2fr auto minmax(clamp(18px, 4vmin, 40px), 1fr) auto 1fr 76px;
+    grid-template-rows: max(0px, min(var(--free) / 2, 2 * (var(--free) - var(--gap)) / 3, var(--room) - 2 * var(--gap))) auto minmax(var(--gap), 1fr) auto 1fr 76px;
     justify-items: center;
     padding: 16px 16px 0;
     text-align: center;
+    /* the last term is the last resort: in a window too short even for mark, gap, what sits below and footer, the
+       mark gives up height so they still fit. Below is the name alone, since the sliding captions hide first; for
+       the static caption grid the script sets the whole text block plus a gap of air, so the mark yields a little
+       before the captions reach the footer, but never below three quarters of its 64vh (then the captions hide) */
+    --below: var(--wordmark-size);
+    --mark-size: max(48px, min(80vw, 64vh, 800px, var(--vh) - 92px - var(--gap) - var(--below)));
   }
   .mark {
     grid-row: 2;
-    /* the last term is the last resort: in a window too short even for mark, name and footer, the mark gives up
-       height so those three still fit (the 92px are the top padding and the footer's clearance) */
-    --mark-size: max(48px, min(80vw, 64vh, 720px, 100vh - 92px - clamp(18px, 4vmin, 40px) - var(--wordmark-size)));
-    --mark-size: max(48px, min(80vw, 64vh, 720px, 100dvh - 92px - clamp(18px, 4vmin, 40px) - var(--wordmark-size)));
     width: var(--mark-size);
     height: var(--mark-size); /* stated, not auto: a grid row would otherwise squeeze the svg in a short window */
     color: var(--ink);
@@ -104,7 +114,10 @@
     /* 1. the name waits for the mark (last stroke lands at 1.65 s), then rises in; the captions begin after it */
     .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    p.sub span { animation-delay: 2.2s; } /* p.sub outranks the .sub span shorthand below, which would zero the delay */
+    .sub span { animation: rotate 34.2s infinite; }
+    .sub span:last-child { animation-name: rotate-last; }
+    .sub .dot { animation: dot-in 34.2s infinite; }
+    p.sub span { animation-delay: 2.2s; } /* p.sub outranks the .sub span shorthand above, which would zero the delay */
     p.sub span:nth-child(2) { animation-delay: 5.4s; }
     p.sub span:nth-child(3) { animation-delay: 8.6s; }
     p.sub span:nth-child(4) { animation-delay: 11.8s; }
@@ -155,10 +168,8 @@
   .sub span {
     position: absolute;
     left: 0; right: 0;
-    opacity: 0;
-    animation: rotate 34.2s infinite;
+    opacity: 0; /* the animations (in the motion block above) bring each in; without them nothing shows */
   }
-  .sub span:last-child { animation-name: rotate-last; }
   @keyframes rotate {
     0%           { opacity: 1; transform: translateX(100%); animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
     1.754%       { opacity: 1; transform: none; }
@@ -174,44 +185,28 @@
   }
   /* each dot fades in over .3 s at its own delay, holds while its caption shows, and is hidden again before the
      caption's next pass */
-  .sub .dot { font-style: normal; opacity: 0; animation: dot-in 34.2s infinite; }
+  .sub .dot { font-style: normal; opacity: 0; }
   @keyframes dot-in { 0% { opacity: 0; } .877%, 28% { opacity: 1; } 28.01%, 100% { opacity: 0; } }
-  /* reduced motion: no sliding captions at all. The same spans become one static row, centred, no wider than 120 % of the
-     name (GHOSTWOOD LABS is 14 monospace characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its
-     size, so 11.88em), wrapping into centred lines; each word kept whole, a middle dot fixed just ahead of every word
-     and hidden where a row starts (it hangs in the 1.6em column gap to the left of its word, so the separators of
-     every row line up). The columns are equal and even in number, so a column of separators runs down the centre
-     of the mark. The script at the foot of the page picks how many columns fit the bound and marks each row's
-     first caption, since CSS cannot do either. Opening the
-     page as /?motion=reduce forces the same look for checking (the one-line script in the head sets the attribute);
-     it also stills the mark and the name, as the no-preference block above never runs for real users */
-  @media (prefers-reduced-motion: reduce) {
-    .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
-    .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
-    .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
-    .sub span:last-child:not(.alone)::after { content: "\2026"; }
-    .sub .dot { display: none; }
-    .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
-    .sub span { text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
-    .sub span.line-start { text-align: right; }
-    .sub.stacked span { text-align: center; } /* one column: nothing to hug */
-    /* "And more…" on a row of its own: its two words take the two columns, so the space between them sits on the
-       separators' line; each word is pulled .41em toward the gap so the space reads as an ordinary one (.78em) */
-    .sub span.alone { display: contents; }
-    .sub span.alone::before { content: none; }
-    .sub span.alone b:first-child { text-align: right; transform: translateX(.41em); }
-    .sub span.alone b:last-of-type { text-align: left; transform: translateX(-.41em); }
-    .sub span.alone b:last-of-type::after { content: "\2026"; }
-  }
+  /* reduced motion (the html attribute, set in the head from the system setting or by /?motion=reduce): no sliding
+     captions at all. The same spans become one static row, centred, no wider than 120 % of the name (GHOSTWOOD
+     LABS is 14 monospace characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its size, so
+     11.88em), wrapping into centred lines; each word kept whole, a middle dot fixed just ahead of every word and
+     hidden where a row starts (it hangs in the 1.6em column gap to the left of its word, so the separators of every
+     row line up). The columns are equal and even in number, so a column of separators runs down the centre of the
+     mark. The script at the foot of the page picks how many columns fit the bound and marks each row's first
+     caption, since CSS cannot do either. The mark and the name are stilled too, which matters only under the dev
+     switch: the motion block above never runs for real reduced-motion users */
   html[data-motion="reduce"] .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
   html[data-motion="reduce"] .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
   html[data-motion="reduce"] .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
   html[data-motion="reduce"] .sub span:last-child:not(.alone)::after { content: "\2026"; }
   html[data-motion="reduce"] .sub .dot { display: none; }
-  html[data-motion="reduce"] .sub span.line-start::before { visibility: hidden; }
-  html[data-motion="reduce"] .sub span { text-align: left; }
+  html[data-motion="reduce"] .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
+  html[data-motion="reduce"] .sub span { text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
   html[data-motion="reduce"] .sub span.line-start { text-align: right; }
-  html[data-motion="reduce"] .sub.stacked span { text-align: center; }
+  html[data-motion="reduce"] .sub.stacked span { text-align: center; } /* one column: nothing to hug */
+  /* "And more…" on a row of its own: its two words take the two columns, so the space between them sits on the
+     separators' line; each word is pulled .41em toward the gap so the space reads as an ordinary one (.78em) */
   html[data-motion="reduce"] .sub span.alone { display: contents; }
   html[data-motion="reduce"] .sub span.alone::before { content: none; }
   html[data-motion="reduce"] .sub span.alone b:first-child { text-align: right; transform: translateX(.41em); }
@@ -219,6 +214,8 @@
   html[data-motion="reduce"] .sub span.alone b:last-of-type::after { content: "\2026"; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; } /* :nth-child(n) outranks .mark .o:nth-child(1) above, which names the outline animation */
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
+  /* #9: the captions as one sentence for screen readers, clipped out of sight; the visual spans are hidden from them */
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   footer {
     position: absolute;
     left: 0; right: 0; bottom: 0;
@@ -229,7 +226,7 @@
     line-height: 1.8;
     color: var(--ink-dim);
   }
-  footer a { color: var(--ink-soft); text-decoration: none; } /* the contact address, one step brighter than the copyright */
+  footer a { color: var(--ink-soft); text-decoration: none; display: inline-block; padding: 12px 8px; margin: -12px -8px; } /* the contact address, one step brighter than the copyright; the padding makes the tap target 46px tall without moving the line */
   footer a:hover, footer a:focus-visible { color: var(--ink); }
 </style>
 <script type="application/ld+json">
@@ -244,14 +241,15 @@
   </svg>
   <div class="text">
   <h1 class="wordmark">Ghostwood Labs</h1>
-  <p class="sub" aria-label="Websites, analytics, prototypes, research, automation, side-quests, and more">
-    <span aria-hidden="true">Websites</span>
-    <span aria-hidden="true">Analytics</span>
-    <span aria-hidden="true">Prototypes</span>
-    <span aria-hidden="true">Research</span>
-    <span aria-hidden="true">Automation</span>
-    <span aria-hidden="true">Side-quests</span>
-    <span aria-hidden="true"><b>And</b> <b>more</b><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
+  <p class="sr">Websites, analytics, prototypes, research, automation, side-quests, and more.</p>
+  <p class="sub" aria-hidden="true">
+    <span>Websites</span>
+    <span>Analytics</span>
+    <span>Prototypes</span>
+    <span>Research</span>
+    <span>Automation</span>
+    <span>Side-quests</span>
+    <span><b>And</b> <b>more</b><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
   </p>
   </div>
 </main>
@@ -261,14 +259,25 @@
   // caption row (reduced motion, or /?motion=reduce) is a grid of as many equal columns as fit the row's bound, an
   // even number so a column of separator dots runs down the page's centre line, under the mark's centre. The dot
   // hangs ahead of every caption and must not show where a row starts; "And more…" alone on the last row spans the
-  // columns. Re-run on resize, font arrival and a motion change.
+  // columns. The text block's real height goes to the grid (--text-h, so the mark keeps its place unless the block
+  // needs the room) and, when the static grid shows, to the mark's last resort (--below: the block plus a gap of
+  // air, capped so the mark keeps three quarters of its 64vh). Re-run on resize, font arrival and a motion change.
   (function () {
-    var text = document.querySelector('.text'), sub = document.querySelector('.sub'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var main = document.querySelector('main'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
     function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
     function layout() {
+      var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight))); /* --gap */
       sub.classList.remove('no-room');
+      main.style.removeProperty('--below');
       columns();
-      if (text.getBoundingClientRect().bottom > innerHeight - 76) sub.classList.add('no-room'); /* into the footer's row */
+      main.style.setProperty('--text-h', text.offsetHeight + 'px');
+      if (getComputedStyle(sub).display === 'grid') main.style.setProperty('--below', Math.min(text.offsetHeight + gap, innerHeight - 92 - gap - .48 * innerHeight) + 'px');
+      if (text.getBoundingClientRect().bottom > innerHeight - 76) { /* into the footer's row */
+        sub.classList.add('no-room');
+        main.style.removeProperty('--below');
+        main.style.setProperty('--text-h', text.offsetHeight + 'px');
+      }
     }
     function columns() {
       if (getComputedStyle(sub).display !== 'grid') return;
@@ -289,7 +298,10 @@
     layout();
     addEventListener('resize', layout);
     if (document.fonts) document.fonts.ready.then(layout);
-    matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', layout);
+    mq.addEventListener('change', function () {
+      if (!forced) { if (mq.matches) document.documentElement.dataset.motion = 'reduce'; else document.documentElement.removeAttribute('data-motion'); }
+      layout();
+    });
   })();
 </script>
 </body>
