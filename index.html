@@ -141,9 +141,12 @@
     color: var(--ink-dim);
     position: relative;
     height: 1.4em;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+    width: min(100vw, 1200px);
+    margin-left: calc(50% - min(50vw, 600px));
     overflow: hidden;
+  }
+  @media (min-width: 1201px) {
+    .sub { -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); }
   }
 
   .sub b { font-weight: inherit; }
@@ -247,8 +250,11 @@
     }
     function columns() {
       if (getComputedStyle(sub).display !== 'grid') return;
-      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0;
+      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0, two;
+      sub.style.width = '';
       spans.forEach(function (s) { s.classList.remove('alone'); widest = Math.max(widest, textWidth(s)); });
+      two = Math.ceil(2 * widest + gap) + 1;
+      if (two > sub.clientWidth && two <= innerWidth - 32) sub.style.width = two + 'px';
       for (cols = n - n % 2; cols > 1; cols -= 2) {
         if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
       }
