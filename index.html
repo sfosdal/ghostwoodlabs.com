@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ghostwood Labs</title>
-<meta name="description" content="Ghostwood Labs LLC: websites, analytics, prototypes, research, automation, side-quests, and more.">
+<meta name="description" content="Ghostwood Labs LLC: websites, analytics, prototypes, research, automation, side-quests.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#141a20"> <!-- tints the browser chrome on phones to the page ground -->
 <link rel="canonical" href="https://ghostwoodlabs.com/">
@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ghostwood Labs">
 <meta property="og:title" content="Ghostwood Labs">
-<meta property="og:description" content="Websites, analytics, prototypes, research, automation, side-quests, and more.">
+<meta property="og:description" content="Websites, analytics, prototypes, research, automation, side-quests.">
 <meta property="og:url" content="https://ghostwoodlabs.com/">
 <meta property="og:image" content="https://ghostwoodlabs.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -59,15 +59,15 @@
   }
   main {
     /* six grid rows filling the viewport: slack, the mark, slack, the name and captions, slack, the footer. The
-       slack above the mark is what centring the stack of mark, gap, name and sliding caption row would leave
+       slack above the mark is what centring the stack of mark, gap, name and one caption row would leave
        (half the free height; two thirds of what is left once the middle row is down to the gap), figured from that
-       fixed stack height, so the mark sits in the same place whichever caption layout is showing. It only gives
+       fixed stack height, so the mark sits in the same place however many rows the captions take. It only gives
        way when the real text block (the static caption grid can be four rows tall) would otherwise land closer
        than a gap to the footer. The text block is centred in what is left between the mark and the footer. The
        height is stated, not a minimum, because flexible rows only share out a definite height. The footer is
        pinned to the viewport's foot (its row is just its 76px of clearance, the 92px below add the top padding);
        in a window too short for the stack the script at the end hides the captions. */
-    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1.4 * clamp(12px, 1.8vmin, 18px)); /* the name, its margin and the sliding caption row */
+    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1.4 * clamp(12px, 1.8vmin, 18px)); /* the name, its margin and one caption row */
     --text-h: var(--text-fixed); /* the text block's real height; the script sets it */
     --free: calc(var(--vh) - 92px - var(--mark-size) - var(--text-fixed));
     --room: calc(var(--vh) - 92px - var(--mark-size) - var(--text-h));
@@ -78,8 +78,7 @@
     padding: 16px 16px 0;
     text-align: center;
     /* the last term is the last resort: in a window too short even for mark, gap, what sits below and footer, the
-       mark gives up height so they still fit. Below is the name alone, since the sliding captions hide first; for
-       the static caption grid the script sets the whole text block plus a gap of air, so the mark yields a little
+       mark gives up height so they still fit. Below is the name alone until the script runs; then it sets the whole text block plus a gap of air, so the mark yields a little
        before the captions reach the footer, but never below three quarters of its 64vh (then the captions hide) */
     --below: var(--wordmark-size);
     --mark-size: max(48px, min(80vw, 64vh, 800px, var(--vh) - 92px - var(--gap) - var(--below)));
@@ -114,25 +113,7 @@
     /* 1. the name waits for the mark (last stroke lands at 1.65 s), then rises in; the captions begin after it */
     .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .sub span { animation: rotate 34.2s infinite; }
-    .sub span:last-child { animation-name: rotate-last; }
-    .sub .dot { animation: dot-in 34.2s infinite; }
-    p.sub span { animation-delay: 2.2s; } /* p.sub outranks the .sub span shorthand above, which would zero the delay */
-    p.sub span:nth-child(2) { animation-delay: 5.4s; }
-    p.sub span:nth-child(3) { animation-delay: 8.6s; }
-    p.sub span:nth-child(4) { animation-delay: 11.8s; }
-    p.sub span:nth-child(5) { animation-delay: 15s; }
-    p.sub span:nth-child(6) { animation-delay: 18.2s; }
-    p.sub span:nth-child(7) { animation-delay: 21.4s; }
-    /* the eight dots after "And more" start .9 s into its slot and land .6 s apart */
-    p.sub .dot:nth-child(1) { animation-delay: 22.3s; }
-    p.sub .dot:nth-child(2) { animation-delay: 22.9s; }
-    p.sub .dot:nth-child(3) { animation-delay: 23.5s; }
-    p.sub .dot:nth-child(4) { animation-delay: 24.1s; }
-    p.sub .dot:nth-child(5) { animation-delay: 24.7s; }
-    p.sub .dot:nth-child(6) { animation-delay: 25.3s; }
-    p.sub .dot:nth-child(7) { animation-delay: 25.9s; }
-    p.sub .dot:nth-child(8) { animation-delay: 26.5s; }
+    .sub { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .text { grid-row: 4; }
@@ -147,76 +128,35 @@
     white-space: nowrap;
     padding-left: .1em; /* optical: tracking adds trailing space after the last letter */
   }
-  .sub.no-room, html[data-motion="reduce"] .sub.no-room { display: none; } /* the script at the end: no room for the captions in this window */
+  .sub.no-room { display: none; } /* the script at the end: no room for the captions in this window */
+  /* the six captions as one static grid, centred, no wider than 120 % of the name (GHOSTWOOD LABS is 14 monospace
+     characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its size, so 11.88em), wrapping into
+     centred rows; each word kept whole, a middle dot fixed just ahead of every word and hidden where a row starts (it
+     hangs in the 1.6em column gap to the left of its word, so the separators of every row line up). The columns are
+     equal and even in number, so a column of separators runs down the centre of the mark. The script at the foot of
+     the page picks how many columns fit the bound and marks each row's first caption, since CSS cannot do either.
+     Until 2026-10-14 the captions took turns sliding through this row, border to border, and this grid was the
+     reduced-motion layout only; Steve: "drop the slide … just list them all at once", then "remove the and more part
+     entirely" (it had closed the list with eight animated dots) */
   .sub {
-    margin-top: clamp(16px, 3.2vmin, 32px);
+    width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
+    margin: clamp(16px, 3.2vmin, 32px) auto 0;
     font-size: clamp(12px, 1.8vmin, 18px);
     letter-spacing: .18em;
+    line-height: 1.7;
     text-transform: uppercase;
     color: var(--ink-dim);
-    position: relative;
-    height: 1.4em;
-    width: min(100vw, 1200px); /* the full window width, so a caption really starts at one border and leaves at the
-                                  other; capped at 1200px so the slide is no faster on a wide screen (then the edges
-                                  are softened below, so a caption fades in rather than appearing) */
-    margin-left: calc(50% - min(50vw, 600px));
-    overflow: hidden; /* nothing leaks past the edges while a caption is off to one side */
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 1), 1fr);
+    column-gap: 1.6em;
   }
-  @media (min-width: 1201px) {
-    .sub { -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); }
-  }
-  /* 7 captions stacked in one slot, no script. Each slides in from the right window border (.6 s), pauses centred
-     for 2 s, and flies off through the left border (.6 s): a 3.2 s slot. "And more" slides in, holds while its eight
-     dots arrive (done at 5.4 s), stays 3 s more, fades out over 1.6 s, then the slot sits empty 5 s before the loop
-     restarts: a 15 s slot, 34.2 s loop. The delays live in the motion block above, after the name has arrived */
-  .sub b { font-weight: inherit; }
-  .sub span {
-    position: absolute;
-    left: 0; right: 0;
-    opacity: 0; /* the animations (in the motion block above) bring each in; without them nothing shows */
-  }
-  @keyframes rotate {
-    0%           { opacity: 1; transform: translateX(100%); animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
-    1.754%       { opacity: 1; transform: none; }
-    7.602%       { opacity: 1; transform: none; animation-timing-function: cubic-bezier(.7, 0, .9, .5); }
-    9.357%       { opacity: 1; transform: translateX(-100%); }
-    9.358%, 100% { opacity: 0; transform: translateX(-100%); }
-  }
-  @keyframes rotate-last {
-    0%           { opacity: 1; transform: translateX(100%); animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
-    1.754%       { opacity: 1; transform: none; }
-    24.561%      { opacity: 1; transform: none; animation-timing-function: ease-in-out; }
-    29.240%, 100% { opacity: 0; transform: none; }
-  }
-  /* each dot fades in over .3 s at its own delay, holds while its caption shows, and is hidden again before the
-     caption's next pass */
-  .sub .dot { font-style: normal; opacity: 0; }
-  @keyframes dot-in { 0% { opacity: 0; } .877%, 28% { opacity: 1; } 28.01%, 100% { opacity: 0; } }
-  /* reduced motion (the html attribute, set in the head from the system setting or by /?motion=reduce): no sliding
-     captions at all. The same spans become one static row, centred, no wider than 120 % of the name (GHOSTWOOD
-     LABS is 14 monospace characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its size, so
-     11.88em), wrapping into centred lines; each word kept whole, a middle dot fixed just ahead of every word and
-     hidden where a row starts (it hangs in the 1.6em column gap to the left of its word, so the separators of every
-     row line up). The columns are equal and even in number, so a column of separators runs down the centre of the
-     mark. The script at the foot of the page picks how many columns fit the bound and marks each row's first
-     caption, since CSS cannot do either. The mark and the name are stilled too, which matters only under the dev
-     switch: the motion block above never runs for real reduced-motion users */
-  html[data-motion="reduce"] .sub { width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px); margin: clamp(16px, 3.2vmin, 32px) auto 0; height: auto; overflow: hidden; line-height: 1.7; display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); column-gap: 1.6em; }
-  html[data-motion="reduce"] .sub span { position: relative; left: auto; right: auto; opacity: 1; animation: none; transform: none; white-space: nowrap; }
-  html[data-motion="reduce"] .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
-  html[data-motion="reduce"] .sub span:last-child:not(.alone)::after { content: "\2026"; }
-  html[data-motion="reduce"] .sub .dot { display: none; }
-  html[data-motion="reduce"] .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
-  html[data-motion="reduce"] .sub span { text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
-  html[data-motion="reduce"] .sub span.line-start { text-align: right; }
-  html[data-motion="reduce"] .sub.stacked span { text-align: center; } /* one column: nothing to hug */
-  /* "And more…" on a row of its own: its two words take the two columns, so the space between them sits on the
-     separators' line; each word is pulled .41em toward the gap so the space reads as an ordinary one (.78em) */
-  html[data-motion="reduce"] .sub span.alone { display: contents; }
-  html[data-motion="reduce"] .sub span.alone::before { content: none; }
-  html[data-motion="reduce"] .sub span.alone b:first-child { text-align: right; transform: translateX(.41em); }
-  html[data-motion="reduce"] .sub span.alone b:last-of-type { text-align: left; transform: translateX(-.41em); }
-  html[data-motion="reduce"] .sub span.alone b:last-of-type::after { content: "\2026"; }
+  .sub span { position: relative; white-space: nowrap; text-align: left; } /* each word hugs its dot: the first column right-aligned, the rest left */
+  .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
+  .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
+  .sub span.line-start { text-align: right; }
+  .sub.stacked span { text-align: center; } /* one column: nothing to hug */
+  html[data-motion="reduce"] .sub { animation: none; opacity: 1; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; } /* :nth-child(n) outranks .mark .o:nth-child(1) above, which names the outline animation */
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
   /* #9: the captions as one sentence for screen readers, clipped out of sight; the visual spans are hidden from them */
@@ -246,7 +186,7 @@
   </svg>
   <div class="text">
   <h1 class="wordmark">Ghostwood Labs</h1>
-  <p class="sr">Websites, analytics, prototypes, research, automation, side-quests, and more.</p>
+  <p class="sr">Websites, analytics, prototypes, research, automation, side-quests.</p>
   <p class="sub" aria-hidden="true">
     <span>Websites</span>
     <span>Analytics</span>
@@ -254,19 +194,17 @@
     <span>Research</span>
     <span>Automation</span>
     <span>Side-quests</span>
-    <span><b>And</b> <b>more</b><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i><i class="dot">.</i></span>
   </p>
   </div>
 </main>
 <footer><a href="mailto:steve@ghostwoodlabs.com">steve@ghostwoodlabs.com</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
 <script>
-  // The captions give way when the window is too short for mark, name, captions and footer together. And the static
-  // caption row (reduced motion, or /?motion=reduce) is a grid of as many equal columns as fit the row's bound, an
+  // The captions give way when the window is too short for mark, name, captions and footer together. And the
+  // caption row is a grid of as many equal columns as fit the row's bound, an
   // even number so a column of separator dots runs down the page's centre line, under the mark's centre, and never
   // fewer than two where the window has room for two (the name's bound is too narrow for that on a phone). The dot
-  // hangs ahead of every caption and must not show where a row starts; "And more…" alone on the last row spans the
-  // columns. The text block's real height goes to the grid (--text-h, so the mark keeps its place unless the block
-  // needs the room) and, when the static grid shows, to the mark's last resort (--below: the block plus a gap of
+  // hangs ahead of every caption and must not show where a row starts. The text block's real height goes to the grid (--text-h, so the mark keeps its place unless the block
+  // needs the room) and to the mark's last resort (--below: the block plus a gap of
   // air, capped so the mark keeps three quarters of its 64vh). Re-run on resize, font arrival and a motion change.
   (function () {
     var main = document.querySelector('main'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), spans = sub.querySelectorAll('span'), n = spans.length;
@@ -289,7 +227,7 @@
       if (getComputedStyle(sub).display !== 'grid') return;
       var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0, two;
       sub.style.width = '';
-      spans.forEach(function (s) { s.classList.remove('alone'); widest = Math.max(widest, textWidth(s)); }); /* measured as one cell */
+      spans.forEach(function (s) { widest = Math.max(widest, textWidth(s)); }); /* measured as one cell */
       two = Math.ceil(2 * widest + gap) + 1; /* the row is bounded by the name's width, but never narrower than two columns when the window has them (phones) */
       if (two > sub.clientWidth && two <= innerWidth - 32) sub.style.width = two + 'px';
       for (cols = n - n % 2; cols > 1; cols -= 2) {
@@ -298,11 +236,7 @@
       if (cols < 1) cols = 1;
       sub.style.setProperty('--cols', cols);
       sub.classList.toggle('stacked', cols === 1);
-      var alone = cols > 1 && (n - 1) % cols === 0;
-      spans.forEach(function (s, i) {
-        s.classList.toggle('line-start', i % cols === 0);
-        s.classList.toggle('alone', alone && i === n - 1);
-      });
+      spans.forEach(function (s, i) { s.classList.toggle('line-start', i % cols === 0); });
     }
     layout();
     addEventListener('resize', layout);
