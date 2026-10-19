@@ -227,7 +227,7 @@
       if (getComputedStyle(sub).display !== 'grid') return;
       var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0, two;
       sub.style.width = '';
-      spans.forEach(function (s) { widest = Math.max(widest, textWidth(s)); }); /* measured as one cell */
+      spans.forEach(function (s) { s.style.letterSpacing = ''; widest = Math.max(widest, textWidth(s)); }); /* measured as one cell, at the caption's own spacing */
       two = Math.ceil(2 * widest + gap) + 1; /* the row is bounded by the name's width, but never narrower than two columns when the window has them (phones) */
       if (two > sub.clientWidth && two <= innerWidth - 32) sub.style.width = two + 'px';
       for (cols = n - n % 2; cols > 1; cols -= 2) {
@@ -237,6 +237,26 @@
       sub.style.setProperty('--cols', cols);
       sub.classList.toggle('stacked', cols === 1);
       spans.forEach(function (s, i) { s.classList.toggle('line-start', i % cols === 0); });
+      flush(cols);
+    }
+    // As on the back of the business card (Steve, 2026-10-18: "make the website here match the back of the card"):
+    // the words of each column after the first are letter-spaced until they ink as wide as the column's widest, so
+    // the right edge runs flush. The spacing is shared out between the letters; the trailing one after the last
+    // letter is the caption's own .18em, so it is left out of the measure.
+    function flush(cols) {
+      var c, group, target, ls;
+      spans.forEach(function (s) { s.style.letterSpacing = ''; });
+      if (cols < 2) return;
+      ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0;
+      for (c = 1; c < cols; c++) {
+        group = Array.prototype.filter.call(spans, function (s, i) { return i % cols === c; });
+        if (group.length < 2) continue;
+        target = Math.max.apply(null, group.map(function (s) { return textWidth(s) - ls; }));
+        group.forEach(function (s) {
+          var k = s.textContent.length;
+          if (k > 1) s.style.letterSpacing = ls + (target - (textWidth(s) - ls)) / (k - 1) + 'px';
+        });
+      }
     }
     layout();
     addEventListener('resize', layout);
