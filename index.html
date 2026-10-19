@@ -67,7 +67,7 @@
        height is stated, not a minimum, because flexible rows only share out a definite height. The footer is
        pinned to the viewport's foot (its row is just its 76px of clearance, the 92px below add the top padding);
        in a window too short for the stack the script at the end hides the captions. */
-    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1.4 * clamp(12px, 1.8vmin, 18px)); /* the name, its margin and one caption row */
+    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1px + 1.95 * clamp(12px, 1.8vmin, 18px)); /* the name, its margin, the rule, its .55em gap and one caption row */
     --text-h: var(--text-fixed); /* the text block's real height; the script sets it */
     --free: calc(var(--vh) - 92px - var(--mark-size) - var(--text-fixed));
     --room: calc(var(--vh) - 92px - var(--mark-size) - var(--text-h));
@@ -113,7 +113,7 @@
     /* 1. the name waits for the mark (last stroke lands at 1.65 s), then rises in; the captions begin after it */
     .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .sub { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+    .sub, .rule { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .text { grid-row: 4; }
@@ -128,7 +128,18 @@
     white-space: nowrap;
     padding-left: .1em; /* optical: tracking adds trailing space after the last letter */
   }
-  .sub.no-room { display: none; } /* the script at the end: no room for the captions in this window */
+  .sub.no-room, .rule.no-room { display: none; } /* the script at the end: no room for the captions in this window */
+  /* the hairline over the captions, as on the back of the business card (Steve, 2026-10-18: "there is still no horz
+     rule on the website like the biz cards back"): one device pixel in the captions' ink, exactly as wide as the
+     captions' ink and over it edge to edge; the script below measures that after it has laid the grid out. Until it
+     runs the rule is the grid's bound, centred. It sits the name's margin under the name and .55em (the captions'
+     size) over the caption row — with the row's half-leading that is the card's .10 in over 8 pt caps, in ems. */
+  .rule {
+    width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
+    height: 1px;
+    margin: clamp(16px, 3.2vmin, 32px) auto 0;
+    background: var(--ink-dim);
+  }
   /* the six captions as one static grid, centred, no wider than 120 % of the name (GHOSTWOOD LABS is 14 monospace
      characters at .6em plus .1em tracking and the .1em optical pad: 9.9em of its size, so 11.88em), wrapping into
      centred rows; each word kept whole, a middle dot fixed just ahead of every word and hidden where a row starts (it
@@ -140,7 +151,7 @@
      entirely" (it had closed the list with eight animated dots) */
   .sub {
     width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
-    margin: clamp(16px, 3.2vmin, 32px) auto 0;
+    margin: .55em auto 0; /* under the rule; the rule carries the name's margin */
     font-size: clamp(12px, 1.8vmin, 18px);
     letter-spacing: .18em;
     line-height: 1.7;
@@ -156,7 +167,7 @@
   .sub span.line-start::before { visibility: hidden; } /* the script below marks the first caption of each row */
   .sub span.line-start { text-align: right; }
   .sub.stacked span { text-align: center; } /* one column: nothing to hug */
-  html[data-motion="reduce"] .sub { animation: none; opacity: 1; }
+  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule { animation: none; opacity: 1; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; } /* :nth-child(n) outranks .mark .o:nth-child(1) above, which names the outline animation */
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
   /* #9: the captions as one sentence for screen readers, clipped out of sight; the visual spans are hidden from them */
@@ -187,6 +198,7 @@
   <div class="text">
   <h1 class="wordmark">Ghostwood Labs</h1>
   <p class="sr">Web design, analytics, prototypes, research, automation, side-quests.</p>
+  <div class="rule" aria-hidden="true"></div>
   <p class="sub" aria-hidden="true">
     <span>Web Design</span>
     <span>Analytics</span>
@@ -207,18 +219,19 @@
   // needs the room) and to the mark's last resort (--below: the block plus a gap of
   // air, capped so the mark keeps three quarters of its 64vh). Re-run on resize, font arrival and a motion change.
   (function () {
-    var main = document.querySelector('main'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var main = document.querySelector('main'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), spans = sub.querySelectorAll('span'), n = spans.length;
     var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
     function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
     function layout() {
       var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight))); /* --gap */
-      sub.classList.remove('no-room');
+      sub.classList.remove('no-room'); rule.classList.remove('no-room');
       main.style.removeProperty('--below');
       columns();
+      ruleWidth();
       main.style.setProperty('--text-h', text.offsetHeight + 'px');
       if (getComputedStyle(sub).display === 'grid') main.style.setProperty('--below', Math.min(text.offsetHeight + gap, innerHeight - 92 - gap - .48 * innerHeight) + 'px');
       if (text.getBoundingClientRect().bottom > innerHeight - 76) { /* into the footer's row */
-        sub.classList.add('no-room');
+        sub.classList.add('no-room'); rule.classList.add('no-room');
         main.style.removeProperty('--below');
         main.style.setProperty('--text-h', text.offsetHeight + 'px');
       }
@@ -257,6 +270,17 @@
           if (k > 1) s.style.letterSpacing = ls + (target - (textWidth(s) - ls)) / (k - 1) + 'px';
         });
       }
+    }
+    // The rule spans the captions' ink: from the first letter of the leftmost word to the last letter of the
+    // rightmost, the trailing tracking after a last letter left out, as the card's rule was measured. Its left edge
+    // is placed from the text block's, so it is not merely centred (the columns' words differ in width).
+    function ruleWidth() {
+      var l = Infinity, r = -Infinity, ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0, box = text.getBoundingClientRect();
+      if (getComputedStyle(sub).display !== 'grid') { rule.style.width = ''; rule.style.marginLeft = ''; rule.style.marginRight = ''; return; }
+      spans.forEach(function (s) { var rg = document.createRange(); rg.selectNodeContents(s); var b = rg.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right - (parseFloat(getComputedStyle(s).letterSpacing) || ls)); });
+      rule.style.width = Math.round(r - l) + 'px';
+      rule.style.marginLeft = Math.round(l - box.left) + 'px';
+      rule.style.marginRight = '0';
     }
     layout();
     addEventListener('resize', layout);
