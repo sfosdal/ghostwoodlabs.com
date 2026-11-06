@@ -57,7 +57,7 @@
     text-transform: uppercase;
     color: var(--ink);
   }
-  .lede { max-width: 760px; margin: 16px auto 0; font-size: clamp(17px, 2.2vw, 21px); line-height: 1.5; color: var(--ink-mid); text-align: justify; text-wrap: pretty; } /* 2026-11-05: "this part bigger", "fully justify this text", then no one-word last line ("the trailing you looks bad") */
+  .lede { max-width: 46ch; margin: 16px auto 0; font-size: clamp(17px, 2.2vw, 21px); line-height: 1.5; color: var(--ink-mid); text-align: justify; text-wrap: pretty; } /* 2026-11-05 18:25 ("more evenly justified"): the measure is 46 characters, which breaks this text 45 / 44 / 40 — three near-full lines, no stub; `balance` was tried and gapped the first two lines out instead. Re-check the breaks if the wording changes. */ /* 2026-11-05: "this part bigger", "fully justify this text", then no one-word last line ("the trailing you looks bad") */
   .steps { list-style: none; counter-reset: step; display: grid; gap: 16px; margin-top: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
   .steps li { counter-increment: step; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px 20px 22px; }
   .steps li::before { content: counter(step); display: block; font-size: 24px; line-height: 1; color: var(--gold); margin-bottom: 12px; }
