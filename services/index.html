@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Design Services · Ghostwood Labs</title>
+
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141a20">
+<link rel="canonical" href="https://ghostwoodlabs.com/services/">
+<link rel="preload" href="/fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/favicon.ico?v=5" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5">
+<style>
+  @font-face {
+    font-family: "IBM Plex Mono";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/fonts/IBMPlexMono-Medium-Latin.woff2) format("woff2");
+  }
+  :root {
+    --ground: #141a20;
+    --panel: #1a2128;
+    --line: rgba(255,255,255,.12);
+    --ink: #ffffff;
+    --ink-mid: #c1c7cd;
+    --ink-soft: #9ba2a9;
+    --ink-dim: rgba(255,255,255,.5);
+    --gold: #f08a33;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ground) radial-gradient(70vmax 50vmax at 50% 0%, #1b222a, var(--ground) 70%) no-repeat;
+    color: var(--ink-mid);
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 0 20px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  header { text-align: center; padding: 48px 0 8px; }
+  header a { display: inline-block; color: var(--ink); }
+  header svg { width: 224px; height: 224px; display: block; }
+  h1 {
+    margin-top: 20px;
+    font-size: clamp(20px, 4vw, 30px);
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .lede { max-width: 760px; margin: 16px auto 0; font-size: clamp(17px, 2.2vw, 21px); line-height: 1.5; color: var(--ink-mid); text-align: justify; text-wrap: pretty; }
+  .steps { list-style: none; counter-reset: step; display: grid; gap: 16px; margin-top: 20px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .steps li { counter-increment: step; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 20px 20px 22px; }
+  .steps li::before { content: counter(step); display: block; font-size: 24px; line-height: 1; color: var(--gold); margin-bottom: 12px; }
+  .steps h3 { margin-top: 0; font-size: 16px; }
+  @media (min-width: 521px) { .steps h3 { min-height: calc(3.2em + 14px); } }
+  .steps p { margin-top: 8px; }
+  section { margin-top: 56px; }
+
+  h2 {
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 500;
+    letter-spacing: .1em;
+    color: var(--ink);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  h2 span { color: var(--ink-soft); font-size: 15px; margin-left: .6em; }
+  .tiers { display: grid; gap: 16px; margin-top: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .tier {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 22px 22px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tier .n { font-size: 24px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); line-height: 1; margin-bottom: 10px; }
+  h3 { margin-top: 0; font-size: 18px; font-weight: 500; color: var(--ink); letter-spacing: .02em; }
+  .price { margin-top: 10px; font-size: 22px; color: var(--gold); line-height: 1.3; }
+  .price b { color: inherit; }
+  .tier .price, .steps h3 { padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .tier .price + p, .steps h3 + p { margin-top: 14px; }
+  .tier p { margin-top: 12px; }
+  .tier ul { margin-top: 12px; list-style: none; }
+  .tier li { padding-left: 1.3em; position: relative; margin-top: 4px; }
+  .tier li::before { content: "–"; position: absolute; left: 0; color: var(--gold); }
+  .note { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
+  b { font-weight: 500; color: var(--ink); }
+  .contact { margin: 64px auto 0; text-align: center; color: var(--ink-soft); }
+  .contact a, footer a { display: inline-block; padding: 12px 6px; margin: -12px -6px; }
+  a { color: var(--ink); }
+  a:hover, a:focus-visible { color: var(--gold); }
+  footer { text-align: center; padding: 56px 0 40px; font-size: 13px; color: var(--ink-dim); }
+  footer a { color: var(--ink-soft); text-decoration: none; }
+  .footmark { width: 72px; height: 72px; display: inline-block; color: var(--ink-soft); margin-bottom: 12px; }
+  @media (max-width: 520px) {
+    body { font-size: 14px; } header { padding-top: 32px; } section { margin-top: 36px; }
+    .lede { text-align: left; }
+    .steps li::before { display: inline; margin-right: .5em; vertical-align: -2px; }
+    .steps h3 { display: inline; border-bottom: 0; padding-bottom: 0; }
+    .steps h3 + p { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .steps li, .tier { padding: 16px 16px 18px; }
+    .price .long { display: none; } .price .short { display: inline; }
+  }
+  .price .short { display: none; }
+  @media (max-width: 400px) { h2 span { display: block; margin: 4px 0 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <a href="/" aria-label="Ghostwood Labs home">
+    <svg viewBox="0 0 576 576" aria-hidden="true"><g id="mark" fill="none" stroke="currentColor" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"><path d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path d="M288 57.5L288 177.5"/><path d="M288 518.5L288 403.5"/><path d="M90.5 176.5L144.63 204.58A26 26 0 0 0 169.19 204.26L209.58 181.92A26 26 0 0 0 223 159.17L223 101.5L158.5 137.5"/><path d="M485.5 176.5L431.37 204.58A26 26 0 0 1 406.81 204.26L366.42 181.92A26 26 0 0 1 353 159.17L353 101.5L417.5 137.5"/><path d="M157 211L157 287.5"/><path d="M419 211L419 287.5"/><path d="M90.5 399.5L144.63 371.42A26 26 0 0 1 169.19 371.74L209.58 394.08A26 26 0 0 1 223 416.83L223 474.5L158.5 438.5"/><path d="M485.5 399.5L431.37 371.42A26 26 0 0 0 406.81 371.74L366.42 394.08A26 26 0 0 0 353 416.83L353 474.5L417.5 438.5"/><path d="M26.5 288L92 325.5L92 250.5"/><path d="M549.5 288L484 325.5L484 250.5"/></g></svg>
+  </a>
+  <h1>Web Design Services</h1>
+  <p class="lede">Websites for small to medium size businesses: built, looked after and hosted. Pick a site, then the care and hosting that suit&nbsp;you.</p>
+</header>
+
+<section aria-labelledby="h-how">
+  <h2 id="h-how">How It Works</h2>
+  <ol class="steps">
+    <li>
+      <h3>Get the web address you want</h3>
+      <p>Your domain name, like yourbusiness.com. Don't have one yet? We'll walk you through getting it.</p>
+    </li>
+    <li>
+      <h3>Where your site lives</h3>
+      <p>That's your hosting. For a simple site it can cost as little as $0 a month. We'll suggest options that fit what you need.</p>
+    </li>
+    <li>
+      <h3>We build it, you approve it</h3>
+      <p>You see the whole site before anyone else does. For 30 days after the preview, send every change you like and we make them all. Once you're happy with it, it goes live.</p>
+    </li>
+    <li>
+      <h3>Keeping your site up to date</h3>
+      <p>New hours, prices or photos? Send them over whenever you need, and we'll make the change.</p>
+    </li>
+  </ol>
+</section>
+
+<section aria-labelledby="h-sites">
+  <h2 id="h-sites">Websites <span>one-time build</span></h2>
+  <div class="tiers">
+    <article class="tier">
+      <div class="n">Tier 1</div>
+      <h3>Static site</h3>
+      <div class="price">from <b>$500</b></div>
+      <p>A fast, hand-built site of a few pages: who you are, what you do, hours, contact and a map.</p>
+      <ul>
+        <li>Your words and photos</li>
+        <li>No database and nothing to patch</li>
+        <li>Loads instantly on phones</li>
+        <li>30 days of changes after the preview, included</li>
+      </ul>
+    </article>
+    <article class="tier">
+      <div class="n">Tier 2</div>
+      <h3>WordPress or Wix</h3>
+      <div class="price">from <b>$1,500</b></div>
+      <p>Already on WordPress or Wix? Your site redesigned, repaired or extended. Starting fresh? A new site on the platform you choose, so you can make everyday edits yourself.</p>
+      <ul>
+        <li>Existing site: redesign, fixes, new pages</li>
+        <li>New site: set up, designed and filled</li>
+        <li>A walkthrough of editing it yourself</li>
+        <li>30 days of changes after the preview, included</li>
+      </ul>
+    </article>
+    <article class="tier">
+      <div class="n">Tier 3</div>
+      <h3>Custom</h3>
+      <div class="price">Quoted</div>
+      <p>Anything that does not fit a template: booking, catalogues, data and maps, integrations with the tools you already use.</p>
+      <ul>
+        <li>Scoped together first</li>
+        <li>A fixed quote before work starts</li>
+        <li>30 days of changes after the preview, included</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section aria-labelledby="h-care">
+  <h2 id="h-care">Maintenance <span>monthly retainer</span></h2>
+  <div class="tiers">
+    <article class="tier">
+      <div class="n">Level 1</div>
+      <h3>Essentials</h3>
+      <div class="price"><b>$50</b>/month</div>
+      <p>Simple edits, such as new text, photos, hours, prices or a post, handled for you.</p>
+      <ul>
+        <li>Up to <b>3</b> edits a month included. An edit is one request that takes up to 30 minutes; send several changes at once and they count as one.</li>
+        <li>Beyond that, <b>$50</b> per 30 minutes</li>
+      </ul>
+    </article>
+    <article class="tier">
+      <div class="n">Level 2</div>
+      <h3>All-inclusive</h3>
+      <div class="price"><b>$200</b>/month</div>
+      <p>Every edit included. Send changes whenever you need them, with no counting and no extra bills.</p>
+      <ul>
+        <li>All edits included</li>
+        <li>Changes made within one week, often much faster</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section aria-labelledby="h-host">
+  <h2 id="h-host">Hosting</h2>
+  <div class="tiers">
+    <article class="tier">
+      <div class="n">Level 1</div>
+      <h3>Your own host</h3>
+      <div class="price"><span class="long">No charge from Ghostwood Labs</span><span class="short">No charge</span></div>
+      <p>Host wherever you like. You keep the account and pay your host directly; the site and its logins are handed over to you.</p>
+
+      <p class="note">Hosts we recommend:</p>
+      <ul>
+        <li><b>Static sites:</b> Cloudflare Pages or Netlify. Both are free for a site like this; we set it up for you.</li>
+        <li><b>WordPress on a budget:</b> DreamHost or Hostinger</li>
+      </ul>
+    </article>
+    <article class="tier">
+      <div class="n">Level 2</div>
+      <h3>Hosted by Ghostwood Labs</h3>
+
+      <div class="price">from <b>$45</b>/month</div>
+      <p>For WordPress and Wix sites. Your site lives in Ghostwood Labs' account, backups and security are taken care of, and you get one bill from us.</p>
+      <ul>
+        <li><b>WordPress</b> on WP Engine: <b>$45</b> a month, hosting included</li>
+        <li><b>Wix</b>: <b>$65</b> a month. That covers your Wix subscription too, so there is nothing to pay Wix directly.</li>
+      </ul>
+      <p class="note">Other platforms considered on request — ask and we will quote it.</p>
+    </article>
+  </div>
+</section>
+
+<p class="contact">Questions, or a quote for something custom: <a href="mailto:steve@ghostwoodlabs.com">steve@ghostwoodlabs.com</a></p>
+</div>
+<footer><a href="/" aria-label="Ghostwood Labs home"><svg class="footmark" viewBox="0 0 576 576" aria-hidden="true"><use href="#mark"/></svg></a><br><a href="/">Ghostwood Labs</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
+</body>
+</html>
