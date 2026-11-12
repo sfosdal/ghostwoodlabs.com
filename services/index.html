@@ -92,6 +92,12 @@
   .sums li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 20px; border-top: 1px solid var(--line); }
   .sums li:first-child { border-top: 0; }
   .sums b { color: var(--gold); white-space: nowrap; font-weight: 500; }
+
+  .steps { list-style: none; margin-top: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; counter-reset: step; }
+  .steps li { display: grid; grid-template-columns: 2.2em 1fr; padding: 14px 20px; border-top: 1px solid var(--line); counter-increment: step; }
+  .steps li:first-child { border-top: 0; }
+  .steps li::before { content: counter(step); color: var(--gold); font-size: 22px; line-height: 1.2; }
+  .steps b { display: block; }
   b { font-weight: 500; color: var(--ink); }
   .contact { margin: 64px auto 0; text-align: center; color: var(--ink-soft); }
   .contact a, footer a { display: inline-block; padding: 12px 6px; margin: -12px -6px; }
@@ -130,23 +136,36 @@
       <p>Up to five pages: who you are, what you do, hours, contact and a map. Fast on phones, nothing to patch.</p>
     </article>
     <article class="tier">
-      <h3>Simple Site You Can Edit</h3>
+      <h3>Site You Change Yourself</h3>
       <div class="price">from <b>$1,500</b></div>
       <p>WordPress or Wix, so you can change words and photos yourself. Already have one? We can redesign or fix it.</p>
     </article>
     <article class="tier">
       <h3>Something Custom</h3>
       <div class="price">Quoted</div>
-      <p>Online booking, catalogues, maps or links to tools you use. A fixed price before any work starts.</p>
+
+      <p>Taking payments or bookings, catalogues, maps or links to tools you use. A fixed price before any work starts.</p>
     </article>
   </div>
 
-  <p class="foot">Every site includes 30 days of changes after you first see it. New pages and features are quoted.</p>
+  <p class="foot">We aim to get it right the first time. Every site includes one round of revisions in the 30 days after you see it. New pages and features are quoted.</p>
+</section>
+
+<section aria-labelledby="h-how">
+  <h2 id="h-how">How It Works</h2>
+  <ol class="steps">
+    <li><div><b>Email us</b>Tell us about your business and what you want the site to do: <a href="mailto:steve@ghostwoodlabs.com">steve@ghostwoodlabs.com</a>. No call needed.</div></li>
+    <li><div><b>We ask a few questions</b>A short list by email: your pages, photos, logo and any site you have now.</div></li>
+    <li><div><b>You get a fixed price</b>In writing, before any work starts. Half starts the work, half is due when your site goes live.</div></li>
+    <li><div><b>We build it, you see it</b>We aim to get it right the first time, and one round of revisions is included.</div></li>
+    <li><div><b>It goes live</b>On your own account or hosted by us. Anything monthly starts that day.</div></li>
+  </ol>
+  <p class="foot">Most sites are ready in two weeks. Something Custom comes with its own timeline and payment schedule in the quote.</p>
 </section>
 
 <section aria-labelledby="h-host">
   <h2 id="h-host">Keeping It Online <span>monthly</span></h2>
-  <p class="intro">Every website needs a host. Pick one:</p>
+  <p class="intro">Every website needs a host. Choose whichever suits you:</p>
   <div class="tiers">
     <article class="tier">
       <h3>Your own account</h3>
@@ -161,8 +180,7 @@
       <p>One bill from us covers the host's fee, backups and security.</p>
       <ul>
         <li>Simple Site: <b>$10</b> a month</li>
-        <li>WordPress: <b>$45</b> a month</li>
-        <li>Wix: <b>$65</b> a month, 12-month minimum</li>
+        <li>WordPress or Wix: <b>$50</b> a month</li>
       </ul>
     </article>
   </div>
@@ -170,7 +188,7 @@
 </section>
 
 <section aria-labelledby="h-care">
-  <h2 id="h-care">Changes For You <span>monthly</span></h2>
+  <h2 id="h-care">Ongoing Changes <span>monthly</span></h2>
   <p class="intro">Send new text, photos, hours or prices and we make the change.</p>
   <div class="tiers">
     <article class="tier">
@@ -181,7 +199,7 @@
     <article class="tier">
       <h3>All-inclusive</h3>
       <div class="price"><b>$200</b>/month</div>
-      <p>Unlimited changes to the pages you already have, each done within a week. New pages and features are quoted.</p>
+      <p>Up to <b>10</b> changes a month, each up to half an hour, done within a week. More than that: <b>$50</b> per half hour. New pages and features are quoted.</p>
     </article>
   </div>
 </section>
@@ -191,7 +209,7 @@
   <ul class="sums">
     <li><span>A simple site on your own free host, with Essentials</span><b>$500 once, then $50 a month</b></li>
     <li><span>A simple site we host, with Essentials</span><b>$500 once, then $60 a month</b></li>
-    <li><span>A WordPress site we host, with All-inclusive</span><b>$1,500 once, then $245 a month</b></li>
+    <li><span>A WordPress site we host, with All-inclusive</span><b>$1,500 once, then $250 a month</b></li>
   </ul>
   <p class="foot">Starting prices. You get a quote to agree before any work starts.</p>
 </section>
