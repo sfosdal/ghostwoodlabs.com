@@ -91,6 +91,7 @@
   .sums { list-style: none; margin-top: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
   .sums li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 20px; border-top: 1px solid var(--line); }
   .sums li:first-child { border-top: 0; }
+  .nb { white-space: nowrap; }
   .sums b { color: var(--gold); white-space: nowrap; font-weight: 500; }
 
   .steps { list-style: none; margin-top: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; counter-reset: step; }
@@ -167,19 +168,19 @@
   <h2 id="h-host">Keeping It Online <span>monthly</span></h2>
   <div class="tiers">
     <article class="tier">
-      <h3>Your own account</h3>
+      <h3>Your Own Account</h3>
       <div class="price"><span class="long">No charge from Ghostwood Labs</span><span class="short">No charge</span></div>
 
       <p>You own the account and pay the host. We set it up and hand you the logins. A simple site can be hosted free.</p>
     </article>
     <article class="tier">
 
-      <h3>We host it for you</h3>
+      <h3>We Host It for You</h3>
       <div class="price">from <b>$10</b>/month</div>
       <p>One bill from us covers the host's fee, backups and security.</p>
       <ul>
         <li>Simple Site: <b>$10</b> a month</li>
-        <li>WordPress or Wix: <b>$50</b> a month</li>
+        <li>WordPress or Wix: <b>$50</b> a month <span class="nb">(Wix: 12-month minimum)</span></li>
       </ul>
     </article>
   </div>
