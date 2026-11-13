@@ -71,6 +71,10 @@
   .card h3 { margin: 6px 20px 0; font-size: 18px; font-weight: 500; letter-spacing: .02em; color: var(--ink); overflow-wrap: anywhere; }
   .card.plain:hover { border-color: var(--line); transform: none; }
   .card .shot { display: block; }
+
+  .card .kind { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .status { flex: none; padding: 3px 9px; border-radius: 999px; font-size: 10px; line-height: 1.3; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); border: 1px solid var(--line); }
+  .status.live { color: #141a20; background: var(--gold); border-color: var(--gold); font-weight: 500; }
   .card .go.quiet { color: var(--ink-soft); }
   .looks { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 20px 20px; }
   .looks a { display: inline-block; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; line-height: 1.2; color: var(--ink); text-decoration: none; }
@@ -98,44 +102,51 @@
   <ul class="work">
     <li><a class="card" href="https://here.events/" target="_blank" rel="noopener">
       <img src="img/here-events.jpg" width="800" height="500" alt="Screenshot of here.events">
-      <span class="kind">Event calendars</span>
+      <span class="kind"><span>Event calendars</span><span class="status live">Live</span></span>
       <h2>here.events</h2>
       <p>A map of local event calendars, one city at a time: more than thirty cities, each rebuilt every day from venue and team schedules.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
     <li><a class="card" href="https://seattle.here.events/" target="_blank" rel="noopener">
       <img src="img/seattle.jpg" width="800" height="500" alt="Screenshot of seattle.here.events">
-      <span class="kind">City calendar</span>
+      <span class="kind"><span>City calendar</span><span class="status live">Live</span></span>
       <h2>seattle.here.events</h2>
       <p>Every show, game and festival in Seattle on one page, with filters by venue and team and a feed you can add to your own calendar.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
     <li><a class="card" href="https://curling.events/" target="_blank" rel="noopener">
       <img src="img/curling.jpg" width="800" height="500" alt="Screenshot of curling.events" loading="lazy">
-      <span class="kind">Sport calendar</span>
+      <span class="kind"><span>Sport calendar</span><span class="status live">Live</span></span>
       <h2>curling.events</h2>
       <p>Championships, bonspiels and club events across the curling world, gathered from each organiser's own schedule.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
     <li><a class="card" href="https://tango.here.events/" target="_blank" rel="noopener">
       <img src="img/tango.jpg" width="800" height="500" alt="Screenshot of tango.here.events" loading="lazy">
-      <span class="kind">Community calendar</span>
+      <span class="kind"><span>Community calendar</span><span class="status live">Live</span></span>
       <h2>tango.here.events</h2>
       <p>Argentine tango classes, milongas and festivals across the US and Canada, in English and Spanish.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
     <li><a class="card" href="https://everettfireplace.com/" target="_blank" rel="noopener">
       <img src="img/fireplace.jpg" width="800" height="500" alt="Screenshot of The Fireplace" loading="lazy">
-      <span class="kind">Bar</span>
+      <span class="kind"><span>Bar</span><span class="status live">Live</span></span>
       <h2>The Fireplace</h2>
       <p>Everett's oldest running bar: daily specials, events, the story of the place and how to find it.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
     <li><a class="card" href="https://fosdal.net/river/" target="_blank" rel="noopener">
       <img src="img/river.jpg" width="800" height="500" alt="Screenshot of Streamline Tavern" loading="lazy">
-      <span class="kind">Bar · demo</span>
+      <span class="kind"><span>Bar</span><span class="status">Demo</span></span>
       <h2>Streamline Tavern</h2>
       <p>A neighbourhood tavern in Lower Queen Anne, with what's on nearby pulled in from the Seattle Center calendar.</p>
+      <span class="go">Visit the site &nearr;</span>
+    </a></li>
+    <li><a class="card" href="https://fosdal.net/prodemollc/" target="_blank" rel="noopener">
+      <img src="img/prodemo.jpg" width="800" height="500" alt="Screenshot of the Pro Demo LLC site" loading="lazy">
+      <span class="kind"><span>Demolition contractor</span><span class="status">Demo</span></span>
+      <h2>Pro Demo LLC</h2>
+      <p>Demolition, excavation and site prep in Arlington, for homeowners and builders across Snohomish County: what they do, how a job goes, and one number to call.</p>
       <span class="go">Visit the site &nearr;</span>
     </a></li>
   </ul>
@@ -145,14 +156,14 @@
   <ul class="work two">
     <li><div class="card plain">
       <img src="img/goat-wordpress.jpg" width="800" height="500" alt="Screenshot of The Traveling Goat on WordPress" loading="lazy">
-      <span class="kind">Bar · WordPress</span>
+      <span class="kind"><span>Bar · WordPress</span><span class="status">Demo</span></span>
       <h3>The Traveling Goat on WordPress</h3>
       <p>The owner edits the menu, events and photos from the WordPress dashboard. Hosted on WP Engine.</p>
       <span class="go quiet">Private preview. Ask us for a look.</span>
     </div></li>
     <li><a class="card" href="https://headless-yiihsybkkfu-steve27621-140a.wix-site-host.com/" target="_blank" rel="noopener">
       <img src="img/goat-wix.jpg" width="800" height="500" alt="Screenshot of The Traveling Goat on Wix" loading="lazy">
-      <span class="kind">Bar · Wix</span>
+      <span class="kind"><span>Bar · Wix</span><span class="status">Demo</span></span>
       <h3>The Traveling Goat on Wix</h3>
       <p>The same site on Wix: the owner edits the menu, events and photos from the Wix dashboard they already know.</p>
       <span class="go">Visit the preview &nearr;</span>
@@ -164,35 +175,35 @@
   <ul class="work two">
     <li><div class="card plain">
       <a class="shot" href="https://fosdal.net/apex/" target="_blank" rel="noopener"><img src="img/apex.jpg" width="800" height="500" alt="Screenshot of the APEX Everett concept" loading="lazy"></a>
-      <span class="kind">Venue · concept, two looks</span>
+      <span class="kind"><span>Venue · concept, two looks</span><span class="status">Demo</span></span>
       <h3>APEX Everett</h3>
       <p>A historic downtown venue with three floors: a faithful rebuild of its site, and a second look arranged around dine, drink and dance.</p>
       <div class="looks"><a href="https://fosdal.net/apex/" target="_blank" rel="noopener">Both looks</a><a href="https://fosdal.net/apex/v1/" target="_blank" rel="noopener">As Built</a><a href="https://fosdal.net/apex/v5/" target="_blank" rel="noopener">Three Floors</a></div>
     </div></li>
     <li><div class="card plain">
       <a class="shot" href="https://fosdal.net/pig/" target="_blank" rel="noopener"><img src="img/pig.jpg" width="800" height="500" alt="Screenshot of a Flying Pig concept" loading="lazy"></a>
-      <span class="kind">Restaurant · concept, nine looks</span>
+      <span class="kind"><span>Restaurant · concept, nine looks</span><span class="status">Demo</span></span>
       <h3>The Flying Pig</h3>
       <p>One Everett restaurant, nine directions: six grounded looks from heritage to dive bar, and three just-for-fun ones.</p>
       <div class="looks"><a href="https://fosdal.net/pig/" target="_blank" rel="noopener">All nine</a><a href="https://fosdal.net/pig1/" target="_blank" rel="noopener">The Hangar</a><a href="https://fosdal.net/pig2/" target="_blank" rel="noopener">Midnight</a><a href="https://fosdal.net/pig3/" target="_blank" rel="noopener">Flight Deck</a><a href="https://fosdal.net/pig4/" target="_blank" rel="noopener">The Gastropub</a><a href="https://fosdal.net/pig5/" target="_blank" rel="noopener">The Neighborhood</a><a href="https://fosdal.net/pig6/" target="_blank" rel="noopener">The Dive</a><a href="https://fosdal.net/pig7/" target="_blank" rel="noopener">Supper Club</a><a href="https://fosdal.net/pig8/" target="_blank" rel="noopener">Pop Art</a><a href="https://fosdal.net/pig9/" target="_blank" rel="noopener">Riso Zine</a></div>
     </div></li>
     <li><a class="card" href="https://fosdal.net/apex/v5/" target="_blank" rel="noopener">
       <img src="img/apex-three-floors.jpg" width="800" height="500" alt="Screenshot of the APEX Everett Three Floors concept" loading="lazy">
-      <span class="kind">Venue · concept look</span>
+      <span class="kind"><span>Venue · concept look</span><span class="status">Demo</span></span>
       <h3>APEX Everett: Three Floors</h3>
       <p>The furthest from the venue's current site: the whole page arranged around a floor picker for dining, drinks and dancing.</p>
       <span class="go">Visit the concept &nearr;</span>
     </a></li>
     <li><a class="card" href="https://fosdal.net/pig8/" target="_blank" rel="noopener">
       <img src="img/pig-pop-art.jpg" width="800" height="500" alt="Screenshot of the Flying Pig Pop Art concept" loading="lazy">
-      <span class="kind">Restaurant · concept look</span>
+      <span class="kind"><span>Restaurant · concept look</span><span class="status">Demo</span></span>
       <h3>The Flying Pig: Pop Art</h3>
       <p>The furthest from the rest: comic-book type, halftone dots and speech bubbles for the same menu, hours and story.</p>
       <span class="go">Visit the concept &nearr;</span>
     </a></li>
     <li><a class="card" href="https://fosdal.net/nwsswa/" target="_blank" rel="noopener">
       <img src="img/nwsswa.jpg" width="800" height="500" alt="Screenshot of the Northwest Subie Specialists concept" loading="lazy">
-      <span class="kind">Auto shop · concept</span>
+      <span class="kind"><span>Auto shop · concept</span><span class="status">Demo</span></span>
       <h3>Northwest Subie Specialists</h3>
       <p>An independent Subaru shop in Everett: its nineteen pages rebuilt as a fast static site, with the fixes from our review applied.</p>
       <span class="go">Visit the concept &nearr;</span>
