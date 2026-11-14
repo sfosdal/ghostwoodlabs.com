@@ -97,6 +97,10 @@
 
   input:focus-visible, textarea:focus-visible { outline: 2px solid var(--gold); outline-offset: -1px; border-color: transparent; }
 
+  input:user-invalid { border-color: #e5484d; }
+
+  .f .bad { color: #ff8b8e; font-size: 13px; line-height: 1.4; }
+
   ::placeholder { color: var(--ink-dim); }
 
   fieldset { border: 0; min-width: 0; }
@@ -234,15 +238,63 @@
   var says = {
     missing: "Please fill in your name, email and message.",
     email: "That email address doesn't look right. Please check it.",
+    phone: "That phone number doesn't look right. Please check it, or leave it blank.",
     busy: "Too many messages just now. Please try again in an hour, or email hello@ghostwoodlabs.com.",
     long: "That message is too long. Please shorten it, or email hello@ghostwoodlabs.com."
   };
   function show(code) { msg.textContent = says[code] || "Something went wrong and your message was not sent. Please email hello@ghostwoodlabs.com."; }
+  var emailRe = null;
+  try { emailRe = new RegExp("^[^\\s@<>\",;:()[\\]\\\\.]+(?:\\.[^\\s@<>\",;:()[\\]\\\\.]+)*@(?:[\\p{L}\\p{N}](?:[\\p{L}\\p{N}-]*[\\p{L}\\p{N}])?\\.)+(?:\\p{L}{2,}|xn--[a-z0-9-]+)$", "iu"); } catch (x) {}
+  function formatPhone(raw) {
+    var v = String(raw || "").replace(/^\s+|\s+$/g, "");
+    if (!v) return "";
+    var ext = "", m = v.match(/\s*(?:x|ext\.?|extension|#)\s*(\d{1,6})\s*$/i);
+    if (m) { ext = " x" + m[1]; v = v.slice(0, m.index).replace(/\s+$/, ""); }
+    if (/[^\d\s()+.\-\/]/.test(v) || (v.match(/\+/g) || []).length > 1 || (v.indexOf("+") > 0)) return null;
+    var intl = v.charAt(0) === "+";
+    if (intl) v = v.replace(/\(\s*0\s*\)/g, " ");
+    var d = v.replace(/\D/g, "");
+    var n = d.length === 11 && d.charAt(0) === "1" ? d.slice(1) : !intl && d.length === 10 ? d : "";
+    if (n) return /^[2-9]\d{2}[2-9]/.test(n) ? "(" + n.slice(0, 3) + ") " + n.slice(3, 6) + "-" + n.slice(6) + ext : null;
+    if (!intl || d.length < 8 || d.length > 15) return null;
+    return "+" + v.slice(1).replace(/[^\d\s]+/g, " ").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") + ext;
+  }
+  var emailIn = form.elements.email, phoneIn = form.elements.phone;
+  function note(input, text) {
+    var box = input.parentNode, p = box.querySelector(".bad");
+    if (!text) { if (p) box.removeChild(p); input.removeAttribute("aria-describedby"); return; }
+    if (!p) { p = document.createElement("span"); p.className = "bad"; p.id = input.name + "-bad"; box.appendChild(p); }
+    p.textContent = text; input.setAttribute("aria-describedby", p.id);
+  }
+  function checkEmail(shown) {
+    var v = emailIn.value.replace(/^\s+|\s+$/g, "");
+    var bad = v && emailRe && !emailRe.test(v) ? "Enter a full email address, like name@example.com." : "";
+    emailIn.setCustomValidity(bad);
+    if (shown || !bad) note(emailIn, bad);
+  }
+  function checkPhone(shown) {
+    var f = formatPhone(phoneIn.value);
+    var bad = f === null ? "Enter a 10-digit phone number, like (425) 555-0199, or an international number starting with +." : "";
+    phoneIn.setCustomValidity(bad);
+    if (shown || !bad) note(phoneIn, bad);
+    return f;
+  }
+  emailIn.addEventListener("input", function () { checkEmail(false); });
+  emailIn.addEventListener("change", function () { checkEmail(true); });
+  phoneIn.addEventListener("input", function () { checkPhone(false); });
+  phoneIn.addEventListener("change", function () { var f = checkPhone(true); if (f) phoneIn.value = f; });
+  form.addEventListener("invalid", function (ev) {
+    if (ev.target === emailIn) checkEmail(true);
+    if (ev.target === phoneIn) checkPhone(true);
+  }, true);
+  checkEmail(false); checkPhone(false);
   var e = new URLSearchParams(location.search).get("e");
   if (e) show(e);
   if (!window.fetch || !window.URLSearchParams || !window.FormData) return;
   form.addEventListener("submit", function (ev) {
     ev.preventDefault();
+    var f = checkPhone(true);
+    if (f) phoneIn.value = f;
     btn.disabled = true; btn.textContent = "Sending…"; msg.textContent = "";
     fetch(form.action, {
       method: "POST",
