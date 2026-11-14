@@ -279,10 +279,38 @@
     if (shown || !bad) note(phoneIn, bad);
     return f;
   }
+  function typing(d) {
+    var p = "";
+    if (d.charAt(0) === "1") { p = "1 "; d = d.slice(1); }
+    if (d.length > 10) return null;
+    if (!d) return p ? "1" : "";
+    if (d.length <= 3) return p + "(" + d;
+    if (d.length <= 6) return p + "(" + d.slice(0, 3) + ") " + d.slice(3);
+    return p + "(" + d.slice(0, 3) + ") " + d.slice(3, 6) + "-" + d.slice(6);
+  }
+  var lastDigits = phoneIn.value.replace(/\D/g, "");
+  function asTyped(ev) {
+    var v = phoneIn.value, d = v.replace(/\D/g, "");
+    if (/^\s*\+/.test(v) || /[a-z#]/i.test(v)) { lastDigits = d; return; }
+    var pos = phoneIn.selectionStart == null ? v.length : phoneIn.selectionStart;
+    var atEnd = pos >= v.length, before = v.slice(0, pos).replace(/\D/g, "").length;
+    var kind = (ev && ev.inputType) || "";
+    if (d === lastDigits && kind.indexOf("insert") === 0) return;
+    if (d && d === lastDigits && kind === "deleteContentBackward" && before > 0) { d = d.slice(0, before - 1) + d.slice(before); before--; atEnd = false; }
+    else if (d && d === lastDigits && kind === "deleteContentForward" && before < d.length) { d = d.slice(0, before) + d.slice(before + 1); atEnd = false; }
+    var out = typing(d);
+    lastDigits = d;
+    if (out === null || out === v) return;
+    phoneIn.value = out;
+    if (document.activeElement !== phoneIn || !phoneIn.setSelectionRange) return;
+    var at = out.length;
+    if (!atEnd) { at = 0; for (var n = 0; at < out.length && n < before; at++) if (/\d/.test(out.charAt(at))) n++; }
+    phoneIn.setSelectionRange(at, at);
+  }
   emailIn.addEventListener("input", function () { checkEmail(false); });
-  emailIn.addEventListener("change", function () { checkEmail(true); });
-  phoneIn.addEventListener("input", function () { checkPhone(false); });
-  phoneIn.addEventListener("change", function () { var f = checkPhone(true); if (f) phoneIn.value = f; });
+  emailIn.addEventListener("blur", function () { checkEmail(true); });
+  phoneIn.addEventListener("input", function (ev) { asTyped(ev); checkPhone(false); });
+  phoneIn.addEventListener("blur", function () { var f = checkPhone(true); if (f) { phoneIn.value = f; lastDigits = f.replace(/\D/g, ""); } });
   form.addEventListener("invalid", function (ev) {
     if (ev.target === emailIn) checkEmail(true);
     if (ev.target === phoneIn) checkPhone(true);
