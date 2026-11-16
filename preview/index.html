@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghostwood Labs</title>
+<meta name="description" content="Ghostwood Labs LLC: web design, analytics, prototypes, research, automation, side-quests.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#141a20">
+<meta name="robots" content="noindex">
+<link rel="me" href="https://mastodon.social/@ghostwoodlabs">
+<script>if (/[?&]motion=reduce(&|$)/.test(location.search) || matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.dataset.motion = "reduce";</script>
+<link rel="preload" href="/fonts/IBMPlexMono-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="icon" href="/favicon.ico?v=5" sizes="48x48">
+<link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ghostwood Labs">
+<meta property="og:title" content="Ghostwood Labs">
+<meta property="og:description" content="Web design, analytics, prototypes, research, automation, side-quests.">
+<meta property="og:url" content="https://ghostwoodlabs.com/">
+<meta property="og:image" content="https://ghostwoodlabs.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Ghostwood Labs mark over the name">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  @font-face {
+    font-family: "IBM Plex Mono";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(/fonts/IBMPlexMono-Medium-Latin.woff2) format("woff2");
+  }
+  :root {
+    --ground: #141a20;
+    --ink: #ffffff;
+    --ink-mid: #c1c7cd;
+    --ink-soft: #9ba2a9;
+    --ink-dim: rgba(255,255,255,.5);
+    --wordmark-size: clamp(18px, 4vmin, 44px);
+    --gap: clamp(18px, 4vmin, 40px);
+    --vh: 100vh;
+    --gold: #e8791d;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @supports (height: 1dvh) { :root { --vh: 100dvh; } }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+
+    background: var(--ground) radial-gradient(70vmax 70vmax at 50% 42%, #1b222a, var(--ground) 70%) no-repeat;
+    color: var(--ink);
+    font-family: var(--mono);
+    position: relative;
+    min-height: var(--vh);
+  }
+  main {
+    --foot: 76px;
+    --nav-size: calc(.5349 * var(--wordmark-size));
+    --nav-gap: clamp(10px, 2vmin, 20px);
+    --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1px + 1.95 * clamp(12px, 1.8vmin, 18px) + .7em + var(--nav-gap) + 1.6 * var(--nav-size));
+    --text-h: var(--text-fixed);
+    --free: calc(var(--vh) - var(--foot) - 16px - var(--mark-size) - var(--text-fixed));
+    --room: calc(var(--vh) - var(--foot) - 16px - var(--mark-size) - var(--text-h));
+    height: var(--vh);
+    display: grid;
+    grid-template-rows: max(0px, min(var(--free) / 2, 2 * (var(--free) - var(--gap)) / 3, var(--room) - 2 * var(--gap))) auto minmax(var(--gap), 1fr) auto 1fr var(--foot);
+    justify-items: center;
+    padding: 16px 16px 0;
+    text-align: center;
+
+    --below: calc(var(--wordmark-size) + var(--nav-gap) + 1.6 * var(--nav-size));
+    --mark-size: max(48px, min(80vw, 64vh, 800px, var(--vh) - var(--foot) - 16px - var(--gap) - var(--below)));
+  }
+  .mark {
+    grid-row: 2;
+    width: var(--mark-size);
+    height: var(--mark-size);
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mark .o { stroke-dasharray: 0 3; animation: 1.1s cubic-bezier(.4, 0, .2, 1) both; }
+    .mark .o:nth-child(1) { animation-name: draw-left; }
+    .mark .o:nth-child(2) { animation-name: draw-right; }
+    @keyframes draw-left  { 0% { stroke-dasharray: 0 3; stroke-dashoffset: 0; opacity: 0; } 3% { opacity: 1; } 100% { stroke-dasharray: .5071 3; stroke-dashoffset: 0; opacity: 1; } }
+    @keyframes draw-right { 0% { stroke-dasharray: 0 3; stroke-dashoffset: -1; opacity: 0; } 3% { opacity: 1; } 100% { stroke-dasharray: .4929 3; stroke-dashoffset: -.5071; opacity: 1; } }
+    .mark path:nth-child(n+3) {
+      stroke-dasharray: 1 2;
+      stroke-dashoffset: 1.02;
+      animation: draw .7s cubic-bezier(.4, 0, .2, 1) forwards;
+    }
+    .mark path:nth-child(3)                             { animation-delay: .45s; }
+    .mark path:nth-child(5), .mark path:nth-child(6)    { animation-delay: .55s; }
+    .mark path:nth-child(7), .mark path:nth-child(8)    { animation-delay: .65s; }
+    .mark path:nth-child(11), .mark path:nth-child(12)  { animation-delay: .75s; }
+    .mark path:nth-child(9), .mark path:nth-child(10)   { animation-delay: .85s; }
+    .mark path:nth-child(4)                             { animation-delay: .95s; }
+
+    .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .sub, .rule, .text nav { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+  }
+  .text { grid-row: 4; }
+  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px 16px calc(var(--foot) + 16px); --mark-size: max(48px, min(38vw, var(--vh) - var(--foot) - 32px)); }
+  main.side .mark, main.side .text { flex: none; }
+  .wordmark {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: var(--wordmark-size);
+    letter-spacing: .1em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+    padding-left: .1em;
+  }
+  .sub.no-room, .rule.no-room { display: none; }
+  .rule.rule2 { margin-top: .7em; margin-bottom: 0; }
+  .text nav { --ls: .0494em; margin-top: var(--nav-gap); font-size: var(--nav-size); letter-spacing: var(--ls); line-height: 1.6; text-transform: uppercase; color: var(--ink-dim); padding-left: var(--ls); }
+  .text nav .pair { white-space: nowrap; }
+  .text nav a { color: var(--gold); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; background: linear-gradient(currentColor, currentColor) no-repeat 4px calc(100% - 9px) / 0 1px; transition: background-size .2s, color .15s; }
+  .text nav a:hover, .text nav a:focus-visible { color: var(--ink); background-size: calc(100% - 8px - var(--ls)) 1px; }
+  @media (prefers-reduced-motion: reduce) { .text nav a { transition: none; } }
+
+  .rule {
+    width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
+    height: 1px;
+    margin: clamp(16px, 3.2vmin, 32px) auto 0;
+    background: var(--ink-dim);
+  }
+
+  .sub {
+    width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
+    margin: .55em auto 0;
+    font-size: clamp(12px, 1.8vmin, 18px);
+    letter-spacing: .18em;
+    line-height: 1.7;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 1), 1fr);
+    column-gap: 1.6em;
+  }
+  .sub span { position: relative; white-space: nowrap; text-align: left; }
+  .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
+  .sub span.line-start::before { visibility: hidden; }
+  .sub span.line-start { text-align: right; }
+  .sub.stacked span { text-align: center; }
+  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .text nav { animation: none; opacity: 1; }
+  html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; }
+  html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  footer {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 18px 16px 22px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: .06em;
+    line-height: 1.8;
+    color: var(--ink-dim);
+  }
+  footer a { color: var(--ink-soft); text-decoration: none; display: inline-block; padding: 12px 8px; margin: -12px -8px; font-size: 14px; }
+  footer a:hover, footer a:focus-visible { color: var(--ink); }
+  @media (max-width: 559px), (max-height: 559px) { main { --nav-size: calc(1.019 * var(--wordmark-size)); --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1px + 1.95 * clamp(12px, 1.8vmin, 18px) + .7em + var(--nav-gap) + 3.2 * var(--nav-size)); --below: calc(var(--wordmark-size) + var(--nav-gap) + 3.2 * var(--nav-size)); } .text nav { padding-left: 0; } .text nav .sep { display: none; } .text nav .pair { display: block; --ls: .2108em; letter-spacing: var(--ls); padding-left: var(--ls); } .text nav .pair + .sep + .pair { --ls: .1433em; } }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"Ghostwood Labs","legalName":"Ghostwood Labs LLC","url":"https://ghostwoodlabs.com/","logo":"https://ghostwoodlabs.com/apple-touch-icon.png","image":"https://ghostwoodlabs.com/og-image.png","email":"hello@ghostwoodlabs.com","foundingDate":"2026-09-17","address":{"@type":"PostalAddress","addressLocality":"Everett","addressRegion":"WA","addressCountry":"US"}}
+</script>
+</head>
+<body>
+<main>
+  <svg class="mark" viewBox="0 0 576 576" role="img" aria-label="Ghostwood Labs mark">
+    <defs><filter id="rnd" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="7"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -12"/></filter></defs>
+    <g fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" filter="url(#rnd)"><path class="o" pathLength="1" d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path class="o" pathLength="1" d="M300.19 51.03A26 26 0 0 1 275.81 51.03L235.63 29.71A26 26 0 0 0 210.57 30.08L103.63 91.02A26 26 0 0 0 90.5 113.61L90.5 161.4A26 26 0 0 1 77.38 183.98L39.62 205.52A26 26 0 0 0 26.5 228.1L26.5 347.9A26 26 0 0 0 39.62 370.48L77.38 392.02A26 26 0 0 1 90.5 414.6L90.5 462.39A26 26 0 0 0 103.63 484.98L210.57 545.92A26 26 0 0 0 235.63 546.29L275.81 524.97A26 26 0 0 1 300.19 524.97L340.37 546.29A26 26 0 0 0 365.43 545.92L472.37 484.98A26 26 0 0 0 485.5 462.39L485.5 414.6A26 26 0 0 1 498.62 392.02L536.38 370.48A26 26 0 0 0 549.5 347.9L549.5 228.1A26 26 0 0 0 536.38 205.52L498.62 183.98A26 26 0 0 1 485.5 161.4L485.5 113.61A26 26 0 0 0 472.37 91.02L365.43 30.08A26 26 0 0 0 340.37 29.71L300.19 51.03Z"/><path pathLength="1" d="M288 57.5L288 177.5"/><path pathLength="1" d="M288 518.5L288 403.5"/><path pathLength="1" d="M90.5 176.5L144.63 204.58A26 26 0 0 0 169.19 204.26L209.58 181.92A26 26 0 0 0 223 159.17L223 101.5L158.5 137.5"/><path pathLength="1" d="M485.5 176.5L431.37 204.58A26 26 0 0 1 406.81 204.26L366.42 181.92A26 26 0 0 1 353 159.17L353 101.5L417.5 137.5"/><path pathLength="1" d="M157 211L157 287.5"/><path pathLength="1" d="M419 211L419 287.5"/><path pathLength="1" d="M90.5 399.5L144.63 371.42A26 26 0 0 1 169.19 371.74L209.58 394.08A26 26 0 0 1 223 416.83L223 474.5L158.5 438.5"/><path pathLength="1" d="M485.5 399.5L431.37 371.42A26 26 0 0 0 406.81 371.74L366.42 394.08A26 26 0 0 0 353 416.83L353 474.5L417.5 438.5"/><path pathLength="1" d="M26.5 288L92 325.5L92 250.5"/><path pathLength="1" d="M549.5 288L484 325.5L484 250.5"/></g>
+  </svg>
+  <div class="text">
+  <h1 class="wordmark">Ghostwood Labs</h1>
+  <p class="sr">Web design, analytics, prototypes, research, automation, side-quests.</p>
+  <nav class="site" aria-label="Site"><span class="pair"><a href="/web-design/">Web Services</a></span><span class="sep" aria-hidden="true"> &middot; </span><span class="pair"><a href="/analytics/">Data Services</a></span></nav>
+  <div class="rule" aria-hidden="true"></div>
+  <p class="sub" aria-hidden="true">
+    <span>Web Design</span>
+    <span>Analytics</span>
+    <span>Prototypes</span>
+    <span>Research</span>
+    <span>Automation</span>
+    <span>Side-quests</span>
+  </p>
+  <div class="rule rule2" aria-hidden="true"></div>
+  </div>
+</main>
+<footer><a href="mailto:hello@ghostwoodlabs.com">hello@ghostwoodlabs.com</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
+<script>
+
+  (function () {
+    var main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
+    function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
+    function layout() {
+      var foot = parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76;
+      var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight)));
+      main.classList.remove('side');
+      sub.classList.remove('no-room'); rule.classList.remove('no-room'); rule2.classList.remove('no-room');
+      main.style.removeProperty('--below');
+      columns();
+      ruleWidth();
+      main.style.setProperty('--text-h', text.offsetHeight + 'px');
+      if (getComputedStyle(sub).display === 'grid') main.style.setProperty('--below', Math.min(text.offsetHeight + gap, innerHeight - foot - 16 - gap - .4 * innerHeight) + 'px');
+      if (text.getBoundingClientRect().bottom > innerHeight - foot) {
+        main.style.removeProperty('--below');
+        main.classList.add('side');
+        columns();
+        ruleWidth();
+        var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
+        if (tb.height <= innerHeight - foot - 24 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * tb.height) return;
+        main.classList.remove('side');
+        sub.classList.add('no-room'); rule.classList.add('no-room'); rule2.classList.add('no-room');
+        main.style.setProperty('--text-h', text.offsetHeight + 'px');
+      }
+    }
+    function columns() {
+      if (getComputedStyle(sub).display !== 'grid') return;
+      var gap = parseFloat(getComputedStyle(sub).columnGap) || 0, cols, widest = 0, two;
+      sub.style.width = '';
+      spans.forEach(function (s) { s.style.letterSpacing = ''; widest = Math.max(widest, textWidth(s)); });
+      two = Math.ceil(2 * widest + gap) + 1;
+      if (two > sub.clientWidth && two <= innerWidth - 32) sub.style.width = two + 'px';
+      for (cols = n - n % 2; cols > 1; cols -= 2) {
+        if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
+      }
+      if (cols < 1) cols = 1;
+      sub.style.setProperty('--cols', cols);
+      sub.classList.toggle('stacked', cols === 1);
+      spans.forEach(function (s, i) { s.classList.toggle('line-start', i % cols === 0); });
+      flush(cols);
+    }
+
+    function flush(cols) {
+      var c, group, target, ls;
+      spans.forEach(function (s) { s.style.letterSpacing = ''; });
+      if (cols < 2) return;
+      ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0;
+      for (c = 1; c < cols; c++) {
+        group = Array.prototype.filter.call(spans, function (s, i) { return i % cols === c; });
+        if (group.length < 2) continue;
+        target = Math.max.apply(null, group.map(function (s) { return textWidth(s) - ls; }));
+        group.forEach(function (s) {
+          var k = s.textContent.length;
+          if (k > 1) s.style.letterSpacing = ls + (target - (textWidth(s) - ls)) / (k - 1) + 'px';
+        });
+      }
+    }
+
+    function ruleWidth() {
+      var l = Infinity, r = -Infinity, ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0, box = text.getBoundingClientRect();
+      if (getComputedStyle(sub).display !== 'grid') { [rule, rule2].forEach(function (x) { x.style.width = ''; x.style.marginLeft = ''; x.style.marginRight = ''; }); return; }
+      [rule, rule2].forEach(function (x) { x.style.width = '0'; x.style.marginLeft = '0'; });
+      box = text.getBoundingClientRect();
+      spans.forEach(function (s) { var rg = document.createRange(); rg.selectNodeContents(s); var b = rg.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right - (parseFloat(getComputedStyle(s).letterSpacing) || ls)); });
+      [rule, rule2].forEach(function (x) { x.style.width = Math.round(r - l) + 'px'; x.style.marginLeft = Math.round(l - box.left) + 'px'; x.style.marginRight = '0'; });
+    }
+    layout();
+    addEventListener('resize', layout);
+    if (document.fonts) document.fonts.ready.then(layout);
+    mq.addEventListener('change', function () {
+      if (!forced) { if (mq.matches) document.documentElement.dataset.motion = 'reduce'; else document.documentElement.removeAttribute('data-motion'); }
+      layout();
+    });
+  })();
+</script>
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ea8a5e3cae42431ead9c6daf6a080bb7"}'></script>
+</body>
+</html>
