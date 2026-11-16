@@ -67,7 +67,8 @@
     --room: calc(var(--vh) - var(--foot) - 16px - var(--mark-size) - var(--text-h));
     height: var(--vh);
     display: grid;
-    grid-template-rows: max(0px, min(var(--free) / 2, 2 * (var(--free) - var(--gap)) / 3, var(--room) - 2 * var(--gap))) auto minmax(var(--gap), 1fr) auto 1fr var(--foot);
+    --mid: max(var(--gap), min(2.5 * var(--gap), var(--room) / 4));
+    grid-template-rows: max(0px, (var(--room) - var(--mid)) / 2) auto var(--mid) auto 1fr var(--foot);
     justify-items: center;
     padding: 16px 16px 0;
     text-align: center;
@@ -106,7 +107,21 @@
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .text { grid-row: 4; }
-  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px 16px calc(var(--foot) + 16px); --mark-size: max(48px, min(38vw, var(--vh) - var(--foot) - 32px)); }
+  @media (min-width: 560px) and (min-height: 560px) { main { --mark-size: max(48px, min(50vw, 64vh, 800px, var(--vh) - var(--foot) - 16px - var(--gap) - var(--below))); } }
+  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px;
+              --wordmark-size: clamp(24px, min(8.5vmin, 3.6vw), 56px); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: max(48px, min(38vw, var(--vh) - 32px, 640px)); }
+  main.tall { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(.14 * var(--col)); padding: 16px; --nav-gap: calc(.05 * var(--col));
+              --wordmark-size: calc(var(--col) / 11.88); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: calc(.9 * var(--col)); }
+  main.side .text nav, main.tall .text nav { padding-left: var(--ls); }
+  main.side .text nav .sep, main.tall .text nav .sep { display: inline; }
+  main.side .text nav .pair, main.side .text nav .pair + .sep + .pair, main.tall .text nav .pair, main.tall .text nav .pair + .sep + .pair { display: inline; letter-spacing: inherit; padding-left: 0; }
+  main.side .sub, main.tall .sub { font-size: calc(.52 * var(--wordmark-size)); }
+  main.side footer, main.tall footer { position: static; padding: 0; margin-top: calc(1.4 * var(--gap)); }
+  main.tall .mark, main.tall .text { flex: none; }
+  main.tall .rule { margin-top: calc(.06 * var(--col)); }
+  main.tall .sub { margin-top: calc(.038 * var(--col)); }
+  main.tall .rule2 { margin-top: calc(.047 * var(--col)); }
+  main.tall footer { margin-top: calc(.09 * var(--col)); }
   main.side .mark, main.side .text { flex: none; }
   .wordmark {
     font-family: var(--mono);
@@ -201,30 +216,58 @@
 <script>
 
   (function () {
-    var main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var footer = document.querySelector('footer'), main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), spans = sub.querySelectorAll('span'), n = spans.length;
     var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
     function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
     function layout() {
       var foot = parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76;
       var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight)));
-      main.classList.remove('side');
+      unside();
       sub.classList.remove('no-room'); rule.classList.remove('no-room'); rule2.classList.remove('no-room');
       main.style.removeProperty('--below');
+      if (innerWidth > innerHeight && side()) return;
+      if (innerHeight >= innerWidth && tall()) return;
       columns();
       ruleWidth();
       main.style.setProperty('--text-h', text.offsetHeight + 'px');
       if (getComputedStyle(sub).display === 'grid') main.style.setProperty('--below', Math.min(text.offsetHeight + gap, innerHeight - foot - 16 - gap - .4 * innerHeight) + 'px');
       if (text.getBoundingClientRect().bottom > innerHeight - foot) {
         main.style.removeProperty('--below');
-        main.classList.add('side');
-        columns();
-        ruleWidth();
-        var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
-        if (tb.height <= innerHeight - foot - 24 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * tb.height) return;
-        main.classList.remove('side');
+        if (side()) return;
         sub.classList.add('no-room'); rule.classList.add('no-room'); rule2.classList.add('no-room');
         main.style.setProperty('--text-h', text.offsetHeight + 'px');
       }
+    }
+    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); if (footer.parentNode !== document.body) main.after(footer); }
+    function tall() {
+      var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32;
+      main.classList.add('tall');
+      text.appendChild(footer);
+      for (i = 0; i < 6; i++) {
+        main.style.setProperty('--col', col + 'px');
+        columns();
+        ruleWidth();
+        h = text.getBoundingClientRect().bottom - mark.getBoundingClientRect().top;
+        if (h <= avail) break;
+        col = Math.floor(col * Math.min(.98, avail / h));
+      }
+      if (h <= avail && col >= 200) return true;
+      unside();
+      columns();
+      ruleWidth();
+      return false;
+    }
+    function side() {
+      main.classList.add('side');
+      text.appendChild(footer);
+      columns();
+      ruleWidth();
+      var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
+      if (tb.top >= 12 && tb.bottom <= innerHeight - 12 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * (tb.height - footer.offsetHeight)) return true;
+      unside();
+      columns();
+      ruleWidth();
+      return false;
     }
     function columns() {
       if (getComputedStyle(sub).display !== 'grid') return;
