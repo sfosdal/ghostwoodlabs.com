@@ -112,3 +112,8 @@ footer h3{font:500 13px var(--sans);letter-spacing:.14em;text-transform:uppercas
 .also h3{font-size:27px}
 .also ul{display:flex;flex-wrap:wrap;gap:6px 36px;margin:14px 0 12px;font:400 20px/1.4 var(--serif)}
 .also p{color:var(--mid);font-size:16px}
+.skip{position:absolute;left:-999px;top:8px;background:#fff;color:var(--ink);padding:10px 14px;z-index:5}
+.skip:focus{left:8px}
+.legal{display:flex;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
+.legal a{text-underline-offset:3px}
+@media (max-width:560px){.foot p{line-height:2.1}.legal{line-height:2}}
