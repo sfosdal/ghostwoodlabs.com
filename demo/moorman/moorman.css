@@ -114,11 +114,13 @@ footer h3{font:500 13px var(--sans);letter-spacing:.14em;text-transform:uppercas
 .also p{color:var(--mid);font-size:16px}
 .skip{position:absolute;left:-999px;top:8px;background:#fff;color:var(--ink);padding:10px 14px;z-index:5}
 .skip:focus{left:8px}
-.legal{display:flex;justify-content:space-between;gap:6px 24px;flex-wrap:wrap}
+.legal{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:6px 24px}
+.by{text-align:center}
+.legal>span:last-child{text-align:right}
 .legal a{text-underline-offset:3px}
 @media (max-width:560px){.foot p{line-height:2.1}.legal{line-height:2}}
-.by{border-top:1px solid var(--line);padding:16px 0 26px;text-align:center}
-.by a{display:inline-flex;align-items:center;gap:10px;color:var(--mid);text-decoration:none;font-size:12.5px;padding:6px 0}
+.by a{display:inline-flex;align-items:center;gap:10px;color:var(--mid);text-decoration:none;font-size:12.5px;padding:4px 0 0;white-space:nowrap}
 .by b{font:500 12px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-left:4px}
 .by a:hover b{text-decoration:underline;text-underline-offset:4px}
 .by svg{flex:none}
+@media (max-width:1020px){.legal{grid-template-columns:1fr;justify-items:center;text-align:center;gap:8px}.legal>span:last-child{text-align:center}.by{order:3}}
