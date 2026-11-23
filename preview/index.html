@@ -108,20 +108,18 @@
   }
   .text { grid-row: 4; }
   @media (min-width: 560px) and (min-height: 560px) { main { --mark-size: max(48px, min(50vw, 64vh, 800px, var(--vh) - var(--foot) - 16px - var(--gap) - var(--below))); } }
-  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px;
-              --wordmark-size: clamp(24px, min(8.5vmin, 3.6vw), 56px); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: max(48px, min(38vw, var(--vh) - 32px, 640px)); }
-  main.tall { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(.14 * var(--col)); padding: 16px; --nav-gap: calc(.05 * var(--col));
+  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px 16px var(--foot);
+              --wordmark-size: clamp(24px, min(8.5vmin, 3.6vw), 56px); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: max(48px, min(38vw, var(--vh) - 32px - var(--foot), 640px)); }
+  main.tall { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(.14 * var(--col)); padding: 16px 16px var(--foot); --nav-gap: calc(.05 * var(--col));
               --wordmark-size: calc(var(--col) / 11.88); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: calc(.9 * var(--col)); }
   main.side .text nav, main.tall .text nav { padding-left: var(--ls); }
   main.side .text nav .sep, main.tall .text nav .sep { display: inline; }
   main.side .text nav .pair, main.side .text nav .pair + .sep + .pair, main.tall .text nav .pair, main.tall .text nav .pair + .sep + .pair { display: inline; letter-spacing: inherit; padding-left: 0; }
   main.side .sub, main.tall .sub { font-size: calc(.52 * var(--wordmark-size)); }
-  main.side footer, main.tall footer { position: static; padding: 0; margin-top: calc(1.4 * var(--gap)); }
   main.tall .mark, main.tall .text { flex: none; }
   main.tall .rule { margin-top: calc(.06 * var(--col)); }
   main.tall .sub { margin-top: calc(.038 * var(--col)); }
   main.tall .rule2 { margin-top: calc(.047 * var(--col)); }
-  main.tall footer { margin-top: calc(.09 * var(--col)); }
   main.side .mark, main.side .text { flex: none; }
   .wordmark {
     font-family: var(--mono);
@@ -136,7 +134,7 @@
   }
   .sub.no-room, .rule.no-room { display: none; }
   .rule.rule2 { margin-top: .7em; margin-bottom: 0; }
-  .text nav { --ls: .0494em; margin-top: var(--nav-gap); font-size: var(--nav-size); letter-spacing: var(--ls); line-height: 1.6; text-transform: uppercase; color: var(--ink-dim); padding-left: var(--ls); }
+  .text nav { --ls: .0744em; margin-top: var(--nav-gap); font-size: var(--nav-size); letter-spacing: var(--ls); line-height: 1.6; text-transform: uppercase; color: var(--ink-dim); padding-left: var(--ls); }
   .text nav .pair { white-space: nowrap; }
   .text nav a { color: var(--gold); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; background: linear-gradient(currentColor, currentColor) no-repeat 4px calc(100% - 9px) / 0 1px; transition: background-size .2s, color .15s; }
   .text nav a:hover, .text nav a:focus-visible { color: var(--ink); background-size: calc(100% - 8px - var(--ls)) 1px; }
@@ -184,7 +182,7 @@
   }
   footer a { color: var(--ink-soft); text-decoration: none; display: inline-block; padding: 12px 8px; margin: -12px -8px; font-size: 14px; }
   footer a:hover, footer a:focus-visible { color: var(--ink); }
-  @media (max-width: 559px), (max-height: 559px) { main { --nav-size: calc(1.019 * var(--wordmark-size)); --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1px + 1.95 * clamp(12px, 1.8vmin, 18px) + .7em + var(--nav-gap) + 3.2 * var(--nav-size)); --below: calc(var(--wordmark-size) + var(--nav-gap) + 3.2 * var(--nav-size)); } .text nav { padding-left: 0; } .text nav .sep { display: none; } .text nav .pair { display: block; --ls: .2108em; letter-spacing: var(--ls); padding-left: var(--ls); } .text nav .pair + .sep + .pair { --ls: .1433em; } }
+  @media (max-width: 559px), (max-height: 559px) { main { --nav-size: calc(1.019 * var(--wordmark-size)); --text-fixed: calc(var(--wordmark-size) + clamp(16px, 3.2vmin, 32px) + 1px + 1.95 * clamp(12px, 1.8vmin, 18px) + .7em + var(--nav-gap) + 3.2 * var(--nav-size)); --below: calc(var(--wordmark-size) + var(--nav-gap) + 3.2 * var(--nav-size)); } .text nav { padding-left: 0; } .text nav .sep { display: none; } .text nav .pair { display: block; --ls: .391em; letter-spacing: var(--ls); padding-left: var(--ls); } .text nav .pair + .sep + .pair { --ls: .0861em; } }
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"Ghostwood Labs","legalName":"Ghostwood Labs LLC","url":"https://ghostwoodlabs.com/","logo":"https://ghostwoodlabs.com/apple-touch-icon.png","image":"https://ghostwoodlabs.com/og-image.png","email":"hello@ghostwoodlabs.com","foundingDate":"2026-09-17","address":{"@type":"PostalAddress","addressLocality":"Everett","addressRegion":"WA","addressCountry":"US"}}
@@ -199,11 +197,9 @@
   <div class="text">
   <h1 class="wordmark">Ghostwood Labs</h1>
   <p class="sr">Web design, analytics, prototypes, research, automation, side-quests.</p>
-  <nav class="site" aria-label="Site"><span class="pair"><a href="/web-design/">Web Services</a></span><span class="sep" aria-hidden="true"> &middot; </span><span class="pair"><a href="/analytics/">Data Services</a></span></nav>
+  <nav class="site" aria-label="Site"><span class="pair"><a href="/web-design/">Web Design</a></span><span class="sep" aria-hidden="true"> &middot; </span><span class="pair"><a href="/analytics/">Data Analytics</a></span></nav>
   <div class="rule" aria-hidden="true"></div>
   <p class="sub" aria-hidden="true">
-    <span>Web Design</span>
-    <span>Analytics</span>
     <span>Prototypes</span>
     <span>Research</span>
     <span>Automation</span>
@@ -238,11 +234,10 @@
         main.style.setProperty('--text-h', text.offsetHeight + 'px');
       }
     }
-    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); if (footer.parentNode !== document.body) main.after(footer); }
+    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); }
     function tall() {
-      var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32;
+      var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32 - (parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76);
       main.classList.add('tall');
-      text.appendChild(footer);
       for (i = 0; i < 6; i++) {
         main.style.setProperty('--col', col + 'px');
         columns();
@@ -259,11 +254,10 @@
     }
     function side() {
       main.classList.add('side');
-      text.appendChild(footer);
       columns();
       ruleWidth();
       var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
-      if (tb.top >= 12 && tb.bottom <= innerHeight - 12 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * (tb.height - footer.offsetHeight)) return true;
+      if (tb.top >= 12 && tb.bottom <= footer.getBoundingClientRect().top - 4 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * tb.height) return true;
       unside();
       columns();
       ruleWidth();
