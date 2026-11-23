@@ -103,13 +103,13 @@
 
     .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .sub, .rule, .text nav { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+    .sub, .rule, .who, .text nav { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .text { grid-row: 4; }
   @media (min-width: 560px) and (min-height: 560px) { main { --mark-size: max(48px, min(50vw, 64vh, 800px, var(--vh) - var(--foot) - 16px - var(--gap) - var(--below))); } }
-  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px 16px var(--foot);
-              --wordmark-size: clamp(24px, min(8.5vmin, 3.6vw), 56px); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: max(48px, min(38vw, var(--vh) - 32px - var(--foot), 640px)); }
+  main.side { display: flex; align-items: center; justify-content: center; gap: calc(1.6 * var(--gap)); padding: 16px;
+              --wordmark-size: clamp(24px, min(8.5vmin, 3.6vw), 56px); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: max(48px, min(38vw, var(--vh) - 32px, 640px)); }
   main.tall { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(.14 * var(--col)); padding: 16px 16px var(--foot); --nav-gap: calc(.05 * var(--col));
               --wordmark-size: calc(var(--col) / 11.88); --nav-size: calc(.5349 * var(--wordmark-size)); --mark-size: calc(.9 * var(--col)); }
   main.side .text nav, main.tall .text nav { padding-left: var(--ls); }
@@ -132,7 +132,10 @@
     white-space: nowrap;
     padding-left: .1em;
   }
-  .sub.no-room, .rule.no-room { display: none; }
+  .sub.no-room, .rule.no-room, .who.no-room { display: none; }
+  .who { margin-top: 1.1em; font-size: calc(.5 * var(--wordmark-size)); line-height: 1.55; letter-spacing: .02em; color: var(--ink-mid); white-space: nowrap; }
+  main.tall .who { margin-top: calc(.05 * var(--col)); }
+  main.side footer { position: static; padding: 0; margin-top: calc(1.2 * var(--gap)); }
   .rule.rule2 { margin-top: .7em; margin-bottom: 0; }
   .text nav { --ls: .0744em; margin-top: var(--nav-gap); font-size: var(--nav-size); letter-spacing: var(--ls); line-height: 1.6; text-transform: uppercase; color: var(--ink-dim); padding-left: var(--ls); }
   .text nav .pair { white-space: nowrap; }
@@ -164,7 +167,7 @@
   .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; letter-spacing: 0; }
   .sub span.line-start::before { visibility: hidden; }
   .sub.stacked span { text-align: center; }
-  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .text nav { animation: none; opacity: 1; }
+  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .who, html[data-motion="reduce"] .text nav { animation: none; opacity: 1; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; }
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
 
@@ -205,20 +208,21 @@
     <span>Side-quests</span>
   </p>
   <div class="rule rule2" aria-hidden="true"></div>
+  <p class="who">Built for small businesses.<br>Based in Everett, Washington.</p>
   </div>
 </main>
 <footer><a href="mailto:hello@ghostwoodlabs.com">hello@ghostwoodlabs.com</a><br>&copy; 2026 Ghostwood Labs LLC</footer>
 <script>
 
   (function () {
-    var footer = document.querySelector('footer'), main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var footer = document.querySelector('footer'), main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), who = document.querySelector('.who'), spans = sub.querySelectorAll('span'), n = spans.length;
     var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
     function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
     function layout() {
       var foot = parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76;
       var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight)));
       unside();
-      sub.classList.remove('no-room'); rule.classList.remove('no-room'); rule2.classList.remove('no-room');
+      sub.classList.remove('no-room'); rule.classList.remove('no-room'); rule2.classList.remove('no-room'); who.classList.remove('no-room');
       main.style.removeProperty('--below');
       if (innerWidth > innerHeight && side()) return;
       if (innerHeight >= innerWidth && tall()) return;
@@ -229,11 +233,11 @@
       if (text.getBoundingClientRect().bottom > innerHeight - foot) {
         main.style.removeProperty('--below');
         if (side()) return;
-        sub.classList.add('no-room'); rule.classList.add('no-room'); rule2.classList.add('no-room');
+        sub.classList.add('no-room'); rule.classList.add('no-room'); rule2.classList.add('no-room'); who.classList.add('no-room');
         main.style.setProperty('--text-h', text.offsetHeight + 'px');
       }
     }
-    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); }
+    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); if (footer.parentNode !== document.body) main.after(footer); }
     function tall() {
       var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32 - (parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76);
       main.classList.add('tall');
@@ -253,10 +257,11 @@
     }
     function side() {
       main.classList.add('side');
+      text.appendChild(footer);
       columns();
       ruleWidth();
       var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
-      if (tb.top >= 12 && tb.bottom <= footer.getBoundingClientRect().top - 4 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * tb.height) return true;
+      if (tb.top >= 12 && tb.bottom <= innerHeight - 12 && mb.left >= 16 && tb.right <= innerWidth - 16 && mb.width >= .9 * (tb.height - footer.offsetHeight)) return true;
       unside();
       columns();
       ruleWidth();
