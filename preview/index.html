@@ -160,10 +160,9 @@
     grid-template-columns: repeat(var(--cols, 1), 1fr);
     column-gap: 1.6em;
   }
-  .sub span { position: relative; white-space: nowrap; text-align: left; }
-  .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; }
+  .sub span { position: relative; white-space: nowrap; text-align: left; min-width: 0; }
+  .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; letter-spacing: 0; }
   .sub span.line-start::before { visibility: hidden; }
-  .sub span.line-start { text-align: right; }
   .sub.stacked span { text-align: center; }
   html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .text nav { animation: none; opacity: 1; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; }
@@ -274,26 +273,34 @@
         if (widest <= (sub.clientWidth - gap * (cols - 1)) / cols) break;
       }
       if (cols < 1) cols = 1;
+      if (cols === 2) sub.style.width = nameWidth() + 'px';
       sub.style.setProperty('--cols', cols);
       sub.classList.toggle('stacked', cols === 1);
       spans.forEach(function (s, i) { s.classList.toggle('line-start', i % cols === 0); });
       flush(cols);
     }
 
+    function nameWidth() {
+      var w = document.querySelector('.wordmark');
+      return Math.round(textWidth(w) - (parseFloat(getComputedStyle(w).letterSpacing) || 0));
+    }
+
     function flush(cols) {
-      var c, group, target, ls;
+      var gap, ls, max = [0, 0], extra;
+      sub.style.gridTemplateColumns = '';
       spans.forEach(function (s) { s.style.letterSpacing = ''; });
-      if (cols < 2) return;
+      if (cols !== 2) return;
       ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0;
-      for (c = 1; c < cols; c++) {
-        group = Array.prototype.filter.call(spans, function (s, i) { return i % cols === c; });
-        if (group.length < 2) continue;
-        target = Math.max.apply(null, group.map(function (s) { return textWidth(s) - ls; }));
-        group.forEach(function (s) {
-          var k = s.textContent.length;
-          if (k > 1) s.style.letterSpacing = ls + (target - (textWidth(s) - ls)) / (k - 1) + 'px';
-        });
-      }
+      gap = parseFloat(getComputedStyle(sub).columnGap) || 0;
+      spans.forEach(function (s, i) { max[i % 2] = Math.max(max[i % 2], textWidth(s) - ls); });
+      extra = sub.clientWidth - gap - max[0] - max[1];
+      if (extra < 0) { sub.style.width = ''; extra = 0; }
+      max[0] += extra / 2; max[1] += extra / 2;
+      sub.style.gridTemplateColumns = max[0] + 'px ' + max[1] + 'px';
+      spans.forEach(function (s, i) {
+        var k = s.textContent.length;
+        if (k > 1) s.style.letterSpacing = (max[i % 2] - (textWidth(s) - k * ls)) / (k - 1) + 'px';
+      });
     }
 
     function ruleWidth() {
