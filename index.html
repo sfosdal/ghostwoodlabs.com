@@ -101,9 +101,14 @@
     .mark path:nth-child(9), .mark path:nth-child(10)   { animation-delay: .85s; }
     .mark path:nth-child(4)                             { animation-delay: .95s; }
 
-    .wordmark { opacity: 0; animation: rise .6s 1.6s cubic-bezier(.4, 0, .2, 1) forwards; }
+    .wordmark, .text nav, .rule, .sub, .who, footer { opacity: 0; animation: rise .7s cubic-bezier(.4, 0, .2, 1) forwards; }
+    .wordmark { animation-delay: .45s; }
+    .text nav { animation-delay: .55s; }
+    .rule { animation-delay: .65s; }
+    .sub { animation-delay: .75s; }
+    .rule2 { animation-delay: .85s; }
+    .who, footer { animation-delay: .95s; }
     @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .sub, .rule, .who, .text nav { opacity: 0; animation: rise .6s 2.2s cubic-bezier(.4, 0, .2, 1) forwards; }
     @keyframes draw { to { stroke-dashoffset: 0; } }
   }
   .text { grid-row: 4; }
@@ -167,7 +172,7 @@
   .sub span::before { content: "\00B7"; position: absolute; left: -1.6em; width: 1.6em; text-align: center; letter-spacing: 0; }
   .sub span.line-start::before { visibility: hidden; }
   .sub.stacked span { text-align: center; }
-  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .who, html[data-motion="reduce"] .text nav { animation: none; opacity: 1; }
+  html[data-motion="reduce"] .sub, html[data-motion="reduce"] .rule, html[data-motion="reduce"] .who, html[data-motion="reduce"] .text nav, html[data-motion="reduce"] footer { animation: none; opacity: 1; }
   html[data-motion="reduce"] .mark path, html[data-motion="reduce"] .mark .o:nth-child(n) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 1; }
   html[data-motion="reduce"] .wordmark { animation: none; opacity: 1; }
 
@@ -237,7 +242,11 @@
         main.style.setProperty('--text-h', text.offsetHeight + 'px');
       }
     }
-    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); if (footer.parentNode !== document.body) main.after(footer); }
+    function unside() { main.classList.remove('side', 'tall'); main.style.removeProperty('--col'); if (footer.parentNode !== document.body) { main.after(footer); sync(); } }
+    function sync() {
+      var a = who.getAnimations && who.getAnimations()[0], b = footer.getAnimations && footer.getAnimations()[0];
+      if (a && b && a.startTime !== null) b.startTime = a.startTime;
+    }
     function tall() {
       var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32 - (parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76);
       main.classList.add('tall');
@@ -257,7 +266,7 @@
     }
     function side() {
       main.classList.add('side');
-      text.appendChild(footer);
+      text.appendChild(footer); sync();
       columns();
       ruleWidth();
       var tb = text.getBoundingClientRect(), mb = mark.getBoundingClientRect();
