@@ -147,6 +147,14 @@
   .text nav a { color: var(--gold); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; background: linear-gradient(currentColor, currentColor) no-repeat 4px calc(100% - 9px) / 0 1px; transition: background-size .2s, color .15s; }
   .text nav a:hover, .text nav a:focus-visible { color: var(--ink); background-size: calc(100% - 8px - var(--ls)) 1px; }
   @media (prefers-reduced-motion: reduce) { .text nav a { transition: none; } }
+  main .text nav.more { margin-top: .45em; }
+  main.tall .text nav.more { margin-top: max(.45em, 8px); }
+  main:not(.side):not(.tall) .text nav.more, main.lean .text nav.more { position: absolute; top: 0; left: 0; visibility: hidden; pointer-events: none; }
+  .text nav.site:not(.more) a { padding-bottom: max(.22em, 4px); margin-bottom: calc(-1 * max(.22em, 4px)); background-position: 4px calc(100% - max(.22em, 4px) + 3px); }
+  .text nav.more a { padding-top: max(.22em, 4px); margin-top: calc(-1 * max(.22em, 4px)); }
+  main .text nav.mid { display: flex; padding-left: 0; letter-spacing: 0; margin-left: auto; margin-right: auto; }
+  main .text nav.mid .pair { display: block; flex: none; text-align: left; letter-spacing: 0; }
+  main .text nav.mid .sep { display: block; flex: none; text-align: center; letter-spacing: 0; white-space: pre; }
 
   .rule {
     width: min(calc(11.88 * var(--wordmark-size)), 100vw - 32px);
@@ -205,6 +213,7 @@
   <h1 class="wordmark">Ghostwood Labs</h1>
   <p class="sr">Web design, analytics, prototypes, research, automation, side-quests.</p>
   <nav class="site" aria-label="Site"><span class="pair"><a href="/web-design/">Web Design</a></span><span class="sep" aria-hidden="true"> &middot; </span><span class="pair"><a href="/analytics/">Data Analytics</a></span></nav>
+  <nav class="site more" aria-label="More"><span class="pair"><a href="/web-design/#h-work">Our Work</a></span><span class="sep" aria-hidden="true"> &middot; </span><span class="pair"><a href="/web-design/#contact">Contact</a></span></nav>
   <div class="rule" aria-hidden="true"></div>
   <p class="sub" aria-hidden="true">
     <span>Prototypes</span>
@@ -220,13 +229,13 @@
 <script>
 
   (function () {
-    var footer = document.querySelector('footer'), main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), who = document.querySelector('.who'), spans = sub.querySelectorAll('span'), n = spans.length;
+    var footer = document.querySelector('footer'), main = document.querySelector('main'), mark = document.querySelector('.mark'), text = document.querySelector('.text'), sub = document.querySelector('.sub'), rule = document.querySelector('.rule'), rule2 = document.querySelector('.rule2'), who = document.querySelector('.who'), nav = document.querySelector('.text nav'), spans = sub.querySelectorAll('span'), n = spans.length;
     var forced = /[?&]motion=reduce(&|$)/.test(location.search), mq = matchMedia('(prefers-reduced-motion: reduce)');
     function textWidth(s) { var r = document.createRange(); r.selectNodeContents(s); return r.getBoundingClientRect().width; }
     function layout() {
       var foot = parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76;
       var gap = Math.min(40, Math.max(18, .04 * Math.min(innerWidth, innerHeight)));
-      unside();
+      unside(); main.classList.remove('lean');
       sub.classList.remove('no-room'); rule.classList.remove('no-room'); rule2.classList.remove('no-room'); who.classList.remove('no-room');
       main.style.removeProperty('--below');
       if (innerWidth > innerHeight && side()) return;
@@ -247,8 +256,18 @@
       var a = who.getAnimations && who.getAnimations()[0], b = footer.getAnimations && footer.getAnimations()[0];
       if (a && b && a.startTime !== null) b.startTime = a.startTime;
     }
-    function tall() {
-      var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 32 - (parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76);
+    function tall() { return fit(tall1); }
+    function side() { return fit(side1); }
+    function fit(f) {
+      main.classList.remove('lean');
+      if (f()) return true;
+      main.classList.add('lean');
+      if (f()) return true;
+      main.classList.remove('lean');
+      return false;
+    }
+    function tall1() {
+      var col = Math.min(innerWidth - 48, 640), i, h, avail = innerHeight - 52 - (parseFloat(getComputedStyle(main).getPropertyValue('--foot')) || 76);
       main.classList.add('tall');
       for (i = 0; i < 6; i++) {
         main.style.setProperty('--col', col + 'px');
@@ -264,7 +283,7 @@
       ruleWidth();
       return false;
     }
-    function side() {
+    function side1() {
       main.classList.add('side');
       text.appendChild(footer); sync();
       columns();
@@ -300,8 +319,9 @@
     }
 
     function flush(cols) {
-      var gap, ls, max = [0, 0], extra;
+      var gap, ls, max = [0, 0], extra, half, fits;
       sub.style.gridTemplateColumns = '';
+      mid(false);
       spans.forEach(function (s) { s.style.letterSpacing = ''; });
       if (cols !== 2) return;
       ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0;
@@ -309,14 +329,36 @@
       spans.forEach(function (s, i) { max[i % 2] = Math.max(max[i % 2], textWidth(s) - ls); });
       extra = sub.clientWidth - gap - max[0] - max[1];
       if (extra < 0) { sub.style.width = ''; extra = 0; }
-      max[0] += extra / 2; max[1] += extra / 2;
+      half = (sub.clientWidth - gap) / 2; fits = extra > 0;
+      spans.forEach(function (s) { if (textWidth(s) - s.textContent.length * ls > half) fits = false; });
+      if (fits) { max[0] = max[1] = half; } else { max[0] += extra / 2; max[1] += extra / 2; }
       sub.style.gridTemplateColumns = max[0] + 'px ' + max[1] + 'px';
       spans.forEach(function (s, i) {
         var k = s.textContent.length;
         if (k > 1) s.style.letterSpacing = (max[i % 2] - (textWidth(s) - k * ls)) / (k - 1) + 'px';
       });
+      if (fits && (main.classList.contains('side') || main.classList.contains('tall'))) mid(true, sub.clientWidth, gap);
     }
-
+    function mid(on, w, gap) {
+      var navs = text.querySelectorAll('nav'), links = text.querySelectorAll('nav a'), half, widest = 0, size;
+      navs.forEach(function (v) { v.classList.remove('mid'); v.style.width = ''; v.style.fontSize = ''; v.querySelector('.sep').style.width = ''; });
+      links.forEach(function (a) { a.style.letterSpacing = ''; a.style.removeProperty('--ls'); a.parentNode.style.width = ''; });
+      if (!on) return;
+      half = (w - gap) / 2;
+      navs.forEach(function (v) { v.classList.add('mid'); });
+      links.forEach(function (a) { widest = Math.max(widest, textWidth(a)); });
+      size = parseFloat(getComputedStyle(nav).fontSize);
+      navs.forEach(function (v) {
+        if (widest * 1.03 > half) v.style.fontSize = size * half / (widest * 1.03) + 'px';
+        v.style.width = w + 'px';
+        v.querySelector('.sep').style.width = gap + 'px';
+      });
+      links.forEach(function (a) {
+        var k = a.textContent.length, ls = (half - textWidth(a)) / (k - 1);
+        a.parentNode.style.width = half + 'px';
+        a.style.letterSpacing = ls + 'px'; a.style.setProperty('--ls', ls + 'px');
+      });
+    }
     function ruleWidth() {
       var l = Infinity, r = -Infinity, ls = parseFloat(getComputedStyle(spans[0]).letterSpacing) || 0, box = text.getBoundingClientRect();
       if (getComputedStyle(sub).display !== 'grid') { [rule, rule2].forEach(function (x) { x.style.width = ''; x.style.marginLeft = ''; x.style.marginRight = ''; }); return; }
@@ -327,7 +369,7 @@
     }
     layout();
     addEventListener('resize', layout);
-    if (document.fonts) document.fonts.ready.then(layout);
+    if (document.fonts) { document.fonts.ready.then(layout); if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', layout); }
     mq.addEventListener('change', function () {
       if (!forced) { if (mq.matches) document.documentElement.dataset.motion = 'reduce'; else document.documentElement.removeAttribute('data-motion'); }
       layout();
